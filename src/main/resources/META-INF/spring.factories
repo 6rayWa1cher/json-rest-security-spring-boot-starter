@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.a6raywa1cher.websecurityspringbootstarter.WebSecurityAutoConfiguration
