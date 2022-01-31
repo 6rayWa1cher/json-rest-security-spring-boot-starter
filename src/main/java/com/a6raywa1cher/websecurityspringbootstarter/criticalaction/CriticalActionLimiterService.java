@@ -4,12 +4,12 @@ package com.a6raywa1cher.websecurityspringbootstarter.criticalaction;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 import java.time.Duration;
 
-@Slf4j
 public class CriticalActionLimiterService {
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(CriticalActionLimiterService.class);
     private final LoadingCache<String, Integer> attemptsCache;
 
     private final int maxAttempts;

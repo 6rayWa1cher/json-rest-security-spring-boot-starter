@@ -1,10 +1,6 @@
 package com.a6raywa1cher.websecurityspringbootstarter.dao.model;
 
 import com.vladmihalcea.hibernate.type.json.JsonType;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -21,10 +17,6 @@ import java.util.Objects;
 @TypeDefs({
         @TypeDef(name = "json", typeClass = JsonType.class)
 })
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
 public abstract class AbstractUser implements IUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -48,6 +40,9 @@ public abstract class AbstractUser implements IUser {
     @CreatedDate
     private LocalDateTime lastVisitAt;
 
+    public AbstractUser() {
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -59,5 +54,57 @@ public abstract class AbstractUser implements IUser {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUserRole() {
+        return this.userRole;
+    }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public List<RefreshToken> getRefreshTokens() {
+        return this.refreshTokens;
+    }
+
+    public void setRefreshTokens(List<RefreshToken> refreshTokens) {
+        this.refreshTokens = refreshTokens;
+    }
+
+    public LocalDateTime getLastVisitAt() {
+        return this.lastVisitAt;
+    }
+
+    public void setLastVisitAt(LocalDateTime lastVisitAt) {
+        this.lastVisitAt = lastVisitAt;
+    }
+
+    public String toString() {
+        return "AbstractUser(id=" + this.getId() + ", username=" + this.getUsername() + ", userRole=" + this.getUserRole() + ", password=" + this.getPassword() + ", refreshTokens=" + this.getRefreshTokens() + ", lastVisitAt=" + this.getLastVisitAt() + ")";
     }
 }
