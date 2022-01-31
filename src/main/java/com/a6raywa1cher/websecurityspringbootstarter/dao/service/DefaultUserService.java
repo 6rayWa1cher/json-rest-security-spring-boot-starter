@@ -1,7 +1,7 @@
-package com.a6raywa1cher.websecurityspringbootstarter.jpa.service;
+package com.a6raywa1cher.websecurityspringbootstarter.dao.service;
 
-import com.a6raywa1cher.websecurityspringbootstarter.jpa.model.AbstractUser;
-import com.a6raywa1cher.websecurityspringbootstarter.jpa.repo.IUserRepository;
+import com.a6raywa1cher.websecurityspringbootstarter.dao.model.IUser;
+import com.a6raywa1cher.websecurityspringbootstarter.dao.repo.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,24 +23,24 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public void updateLastVisitAt(AbstractUser user) {
+    public void updateLastVisitAt(IUser user) {
         user.setLastVisitAt(LocalDateTime.now());
         userRepository.save(user);
     }
 
     @Override
-    public Optional<AbstractUser> getById(Long id) {
+    public Optional<IUser> getById(Long id) {
         return userRepository.findById(id);
     }
 
     @Override
-    public Optional<AbstractUser> getByLogin(String login) {
+    public Optional<IUser> getByLogin(String login) {
         return userRepository.findByUsername(login);
     }
 
     @Override
-    public Optional<AbstractUser> getByLoginAndPassword(String username, String rawPassword) {
-        Optional<AbstractUser> optional = userRepository.findByUsername(username);
+    public Optional<IUser> getByLoginAndPassword(String username, String rawPassword) {
+        Optional<IUser> optional = userRepository.findByUsername(username);
         return optional.filter(u -> passwordEncoder.matches(rawPassword, u.getPassword()));
     }
 }

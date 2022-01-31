@@ -1,16 +1,14 @@
 package com.a6raywa1cher.websecurityspringbootstarter.component.resolver;
 
 import com.a6raywa1cher.websecurityspringbootstarter.authentication.JwtAuthentication;
-import com.a6raywa1cher.websecurityspringbootstarter.jpa.model.AbstractUser;
-import com.a6raywa1cher.websecurityspringbootstarter.jpa.service.UserService;
+import com.a6raywa1cher.websecurityspringbootstarter.dao.model.IUser;
+import com.a6raywa1cher.websecurityspringbootstarter.dao.service.UserService;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 
-@Component
 public class AuthenticationResolverImpl implements AuthenticationResolver {
 	private final UserService userService;
 
@@ -19,13 +17,13 @@ public class AuthenticationResolverImpl implements AuthenticationResolver {
 	}
 
 	@Override
-	public AbstractUser getUser() throws AuthenticationException {
+	public IUser getUser() throws AuthenticationException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return getUser(authentication);
 	}
 
 	@Override
-	public AbstractUser getUser(Authentication authentication) throws AuthenticationException {
+	public IUser getUser(Authentication authentication) throws AuthenticationException {
 		if (authentication == null) {
 			throw new BadCredentialsException("No credentials presented");
 		}

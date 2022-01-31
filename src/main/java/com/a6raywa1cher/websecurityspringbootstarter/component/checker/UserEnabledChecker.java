@@ -1,7 +1,7 @@
 package com.a6raywa1cher.websecurityspringbootstarter.component.checker;
 
-import com.a6raywa1cher.websecurityspringbootstarter.jpa.model.AbstractUser;
+import com.a6raywa1cher.websecurityspringbootstarter.dao.model.IUser;
 
 public interface UserEnabledChecker {
-    boolean check(AbstractUser user);
+    boolean check(IUser user);
 }

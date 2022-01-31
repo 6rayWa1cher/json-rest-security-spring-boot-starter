@@ -1,4 +1,4 @@
-package com.a6raywa1cher.websecurityspringbootstarter.jpa.model;
+package com.a6raywa1cher.websecurityspringbootstarter.dao.model;
 
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import lombok.Getter;
@@ -25,7 +25,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @RequiredArgsConstructor
-public abstract class AbstractUser {
+public abstract class AbstractUser implements IUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)

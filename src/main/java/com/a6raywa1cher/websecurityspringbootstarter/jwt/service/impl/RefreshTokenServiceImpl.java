@@ -1,12 +1,11 @@
 package com.a6raywa1cher.websecurityspringbootstarter.jwt.service.impl;
 
-import com.a6raywa1cher.websecurityspringbootstarter.jpa.model.AbstractUser;
-import com.a6raywa1cher.websecurityspringbootstarter.jpa.model.RefreshToken;
-import com.a6raywa1cher.websecurityspringbootstarter.jpa.repo.RefreshTokenRepository;
+import com.a6raywa1cher.websecurityspringbootstarter.dao.model.IUser;
+import com.a6raywa1cher.websecurityspringbootstarter.dao.model.RefreshToken;
+import com.a6raywa1cher.websecurityspringbootstarter.dao.repo.RefreshTokenRepository;
 import com.a6raywa1cher.websecurityspringbootstarter.jwt.service.BlockedRefreshTokensService;
 import com.a6raywa1cher.websecurityspringbootstarter.jwt.service.RefreshTokenService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Service
 @Transactional
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 	private final RefreshTokenRepository repository;
@@ -34,8 +32,8 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 		this.refreshTokenDuration = refreshTokenDuration;
 	}
 
-	@Override
-	public RefreshToken issue(AbstractUser user) {
+    @Override
+    public RefreshToken issue(IUser user) {
         List<RefreshToken> tokenList = repository.findAllByUser(user);
         if (tokenList.size() > maxTokensPerUser) {
             repository.deleteAllFromUser(user, tokenList.stream()
@@ -52,21 +50,21 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         return repository.save(user, refreshToken);
     }
 
-	@Override
-	public Optional<RefreshToken> getByToken(AbstractUser user, String token) {
-		return repository.findByToken(user, token);
-	}
+    @Override
+    public Optional<RefreshToken> getByToken(IUser user, String token) {
+        return repository.findByToken(user, token);
+    }
 
-	@Override
-	public void invalidate(AbstractUser user, RefreshToken refreshToken) {
+    @Override
+    public void invalidate(IUser user, RefreshToken refreshToken) {
         service.invalidate(refreshToken.id());
         repository.delete(user, refreshToken);
-	}
+    }
 
-	@Override
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void invalidateAll(AbstractUser user) {
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void invalidateAll(IUser user) {
         repository.findAllByUser(user)
                 .forEach(rt -> service.invalidate(rt.id()));
-	}
+    }
 }

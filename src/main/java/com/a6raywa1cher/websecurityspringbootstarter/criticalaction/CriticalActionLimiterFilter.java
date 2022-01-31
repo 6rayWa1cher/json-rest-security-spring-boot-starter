@@ -1,4 +1,4 @@
-package com.a6raywa1cher.websecurityspringbootstarter.component.criticalaction;
+package com.a6raywa1cher.websecurityspringbootstarter.criticalaction;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;

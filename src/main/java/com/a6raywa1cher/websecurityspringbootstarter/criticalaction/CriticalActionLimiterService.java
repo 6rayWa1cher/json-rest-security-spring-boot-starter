@@ -1,4 +1,4 @@
-package com.a6raywa1cher.websecurityspringbootstarter.component.criticalaction;
+package com.a6raywa1cher.websecurityspringbootstarter.criticalaction;
 
 
 import com.google.common.cache.CacheBuilder;

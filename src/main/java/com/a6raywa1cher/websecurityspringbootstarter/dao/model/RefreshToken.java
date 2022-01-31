@@ -1,4 +1,4 @@
-package com.a6raywa1cher.websecurityspringbootstarter.jpa.model;
+package com.a6raywa1cher.websecurityspringbootstarter.dao.model;
 
 import java.time.LocalDateTime;
 

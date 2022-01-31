@@ -2,8 +2,8 @@ package com.a6raywa1cher.websecurityspringbootstarter.providers;
 
 import com.a6raywa1cher.websecurityspringbootstarter.authentication.JwtAuthentication;
 import com.a6raywa1cher.websecurityspringbootstarter.component.authority.GrantedAuthorityService;
-import com.a6raywa1cher.websecurityspringbootstarter.jpa.model.AbstractUser;
-import com.a6raywa1cher.websecurityspringbootstarter.jpa.service.UserService;
+import com.a6raywa1cher.websecurityspringbootstarter.dao.model.IUser;
+import com.a6raywa1cher.websecurityspringbootstarter.dao.service.UserService;
 import com.a6raywa1cher.websecurityspringbootstarter.jwt.JwtToken;
 import com.a6raywa1cher.websecurityspringbootstarter.jwt.service.BlockedRefreshTokensService;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -43,14 +43,14 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 		if (!service.isValid(jwtToken.getRefreshId())) {
 			throw new CredentialsExpiredException("Refresh-token was revoked");
 		}
-		Long userId = jwtToken.getUid();
-		Optional<AbstractUser> byId = userService.getById(userId);
+        Long userId = jwtToken.getUid();
+        Optional<IUser> byId = userService.getById(userId);
 		if (byId.isEmpty()) {
 			customAuthentication.setAuthenticated(false);
 			throw new UsernameNotFoundException(String.format("User %d doesn't exists", userId));
 		}
-		AbstractUser user = byId.get();
-		Collection<GrantedAuthority> authorities = grantedAuthorityService.getAuthorities(user);
+        IUser user = byId.get();
+        Collection<GrantedAuthority> authorities = grantedAuthorityService.getAuthorities(user);
 		return new JwtAuthentication(authorities, jwtToken);
 	}
 

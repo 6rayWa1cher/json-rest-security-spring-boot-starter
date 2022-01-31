@@ -1,9 +1,9 @@
 package com.a6raywa1cher.websecurityspringbootstarter.rest;
 
 import com.a6raywa1cher.websecurityspringbootstarter.component.resolver.AuthenticationResolver;
-import com.a6raywa1cher.websecurityspringbootstarter.jpa.model.AbstractUser;
-import com.a6raywa1cher.websecurityspringbootstarter.jpa.model.RefreshToken;
-import com.a6raywa1cher.websecurityspringbootstarter.jpa.service.UserService;
+import com.a6raywa1cher.websecurityspringbootstarter.dao.model.IUser;
+import com.a6raywa1cher.websecurityspringbootstarter.dao.model.RefreshToken;
+import com.a6raywa1cher.websecurityspringbootstarter.dao.service.UserService;
 import com.a6raywa1cher.websecurityspringbootstarter.jwt.JwtRefreshPair;
 import com.a6raywa1cher.websecurityspringbootstarter.jwt.service.JwtRefreshPairService;
 import com.a6raywa1cher.websecurityspringbootstarter.jwt.service.RefreshTokenService;
@@ -14,13 +14,15 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Optional;
 
-@RestController
 @RequestMapping("/auth")
 public class AuthController {
 	private final RefreshTokenService refreshTokenService;
@@ -43,11 +45,11 @@ public class AuthController {
 	@SecurityRequirements // erase jwt login
 	public ResponseEntity<JwtRefreshPair> convertToJwt(@RequestBody @Valid LoginRequest loginRequest,
 													   HttpServletRequest request) {
-		Optional<AbstractUser> optional = userService.getByLoginAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
+		Optional<IUser> optional = userService.getByLoginAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
 		if (optional.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
-		AbstractUser user = optional.get();
+		IUser user = optional.get();
 		JwtRefreshPair pair = jwtRefreshPairService.issue(user);
 		SecurityContextHolder.clearContext();
 		request.getSession().invalidate();
@@ -57,7 +59,7 @@ public class AuthController {
 	@PostMapping("/get_access")
 	@SecurityRequirements // erase jwt login
 	public ResponseEntity<JwtRefreshPair> getNewJwtToken(@RequestBody @Valid GetNewJwtTokenRequest request) {
-		AbstractUser user = authenticationResolver.getUser();
+		IUser user = authenticationResolver.getUser();
 		Optional<RefreshToken> optional = refreshTokenService.getByToken(user, request.getRefreshToken());
 		if (optional.isEmpty()) {
 			return ResponseEntity.notFound().build();
@@ -68,7 +70,7 @@ public class AuthController {
 
 	@DeleteMapping("/invalidate")
 	public ResponseEntity<Void> invalidateToken(@RequestBody @Valid InvalidateTokenRequest request) {
-		AbstractUser user = authenticationResolver.getUser();
+		IUser user = authenticationResolver.getUser();
 		Optional<RefreshToken> optional = refreshTokenService.getByToken(user, request.getRefreshToken());
 		optional.ifPresent(refreshToken -> refreshTokenService.invalidate(user, refreshToken));
 		return ResponseEntity.ok().build();
@@ -76,7 +78,7 @@ public class AuthController {
 
 	@DeleteMapping("/invalidate_all")
 	public ResponseEntity<Void> invalidateAllTokens() {
-		AbstractUser user = authenticationResolver.getUser();
+		IUser user = authenticationResolver.getUser();
 		refreshTokenService.invalidateAll(user);
 		return ResponseEntity.ok().build();
 	}

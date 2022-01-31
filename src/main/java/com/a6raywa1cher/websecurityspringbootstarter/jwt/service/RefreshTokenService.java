@@ -1,17 +1,17 @@
 package com.a6raywa1cher.websecurityspringbootstarter.jwt.service;
 
 
-import com.a6raywa1cher.websecurityspringbootstarter.jpa.model.AbstractUser;
-import com.a6raywa1cher.websecurityspringbootstarter.jpa.model.RefreshToken;
+import com.a6raywa1cher.websecurityspringbootstarter.dao.model.IUser;
+import com.a6raywa1cher.websecurityspringbootstarter.dao.model.RefreshToken;
 
 import java.util.Optional;
 
 public interface RefreshTokenService {
-    RefreshToken issue(AbstractUser user);
+    RefreshToken issue(IUser user);
 
-    Optional<RefreshToken> getByToken(AbstractUser user, String token);
+    Optional<RefreshToken> getByToken(IUser user, String token);
 
-    void invalidate(AbstractUser user, RefreshToken refreshToken);
+    void invalidate(IUser user, RefreshToken refreshToken);
 
-    void invalidateAll(AbstractUser user);
+    void invalidateAll(IUser user);
 }

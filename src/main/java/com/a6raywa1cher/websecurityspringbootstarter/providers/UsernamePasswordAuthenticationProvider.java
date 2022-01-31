@@ -1,8 +1,8 @@
 package com.a6raywa1cher.websecurityspringbootstarter.providers;
 
 import com.a6raywa1cher.websecurityspringbootstarter.component.authority.GrantedAuthorityService;
-import com.a6raywa1cher.websecurityspringbootstarter.jpa.model.AbstractUser;
-import com.a6raywa1cher.websecurityspringbootstarter.jpa.service.UserService;
+import com.a6raywa1cher.websecurityspringbootstarter.dao.model.IUser;
+import com.a6raywa1cher.websecurityspringbootstarter.dao.service.UserService;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -34,12 +34,12 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
 				!(authentication.getCredentials() instanceof String inputPassword)) {
 			return null;
 		}
-		String principal = (String) token.getPrincipal();
-		Optional<AbstractUser> byUsername = userService.getByLogin(principal);
+        String principal = (String) token.getPrincipal();
+        Optional<IUser> byUsername = userService.getByLogin(principal);
 		if (byUsername.isEmpty()) {
 			throw new BadCredentialsException("User not exists or incorrect password");
 		}
-		AbstractUser user = byUsername.get();
+        IUser user = byUsername.get();
 		if (user.getPassword() == null || "".equals(user.getPassword())) {
 			throw new DisabledException("User didn't set up password");
 		}

@@ -1,3 +1,8 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.a6raywa1cher.websecurityspringbootstarter.WebSecurityAutoConfiguration,\
-  com.a6raywa1cher.websecurityspringbootstarter.component.criticalaction.CriticalActionLimiterAutoConfiguration
+  com.a6raywa1cher.websecurityspringbootstarter.web.PasswordEncoderAutoConfiguration,\
+  com.a6raywa1cher.websecurityspringbootstarter.web.WebSecurityAutoConfiguration,\
+  com.a6raywa1cher.websecurityspringbootstarter.criticalaction.CriticalActionLimiterAutoConfiguration,\
+  com.a6raywa1cher.websecurityspringbootstarter.dao.JpaConfig,\
+  com.a6raywa1cher.websecurityspringbootstarter.jwt.JwtAuthAutoConfiguration,\
+  com.a6raywa1cher.websecurityspringbootstarter.web.AuthenticationEntryPointConfiguration,\
+  com.a6raywa1cher.websecurityspringbootstarter.rest.AuthControllerAutoConfiguration

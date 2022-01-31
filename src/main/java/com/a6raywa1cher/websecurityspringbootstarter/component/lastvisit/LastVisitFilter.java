@@ -2,8 +2,8 @@ package com.a6raywa1cher.websecurityspringbootstarter.component.lastvisit;
 
 import com.a6raywa1cher.websecurityspringbootstarter.component.resolver.AuthenticationResolveException;
 import com.a6raywa1cher.websecurityspringbootstarter.component.resolver.AuthenticationResolver;
-import com.a6raywa1cher.websecurityspringbootstarter.jpa.model.AbstractUser;
-import com.a6raywa1cher.websecurityspringbootstarter.jpa.service.UserService;
+import com.a6raywa1cher.websecurityspringbootstarter.dao.model.IUser;
+import com.a6raywa1cher.websecurityspringbootstarter.dao.service.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -30,7 +30,7 @@ public class LastVisitFilter extends OncePerRequestFilter {
         } finally {
             try {
                 if (SecurityContextHolder.getContext().getAuthentication() != null) {
-                    AbstractUser user = resolver.getUser();
+                    IUser user = resolver.getUser();
                     if (user.getLastVisitAt().plusSeconds(30).isBefore(LocalDateTime.now())) {
                         userService.updateLastVisitAt(user);
                     }

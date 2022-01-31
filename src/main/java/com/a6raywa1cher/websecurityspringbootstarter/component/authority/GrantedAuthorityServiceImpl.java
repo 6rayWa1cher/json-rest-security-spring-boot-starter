@@ -1,7 +1,7 @@
 package com.a6raywa1cher.websecurityspringbootstarter.component.authority;
 
 import com.a6raywa1cher.websecurityspringbootstarter.component.checker.UserEnabledChecker;
-import com.a6raywa1cher.websecurityspringbootstarter.jpa.model.AbstractUser;
+import com.a6raywa1cher.websecurityspringbootstarter.dao.model.IUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -17,7 +17,7 @@ public class GrantedAuthorityServiceImpl implements GrantedAuthorityService {
 	}
 
 	@Override
-	public Collection<GrantedAuthority> getAuthorities(AbstractUser user) {
+	public Collection<GrantedAuthority> getAuthorities(IUser user) {
 		Object userRole = user.getUserRole();
 		Set<GrantedAuthority> authoritySet = new HashSet<>();
 		authoritySet.add(new SimpleGrantedAuthority("ROLE_" + userRole.toString()));

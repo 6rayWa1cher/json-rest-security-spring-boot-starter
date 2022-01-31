@@ -6,8 +6,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.time.Duration;
@@ -16,22 +14,25 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Optional;
 
-@Service
 public class JwtTokenServiceImpl implements JwtTokenService {
-    private final static String ISSUER_NAME = "hackserv-spring";
     private final static String REFRESH_TOKEN_ID_CLAIM = "rti";
-    @Value("${jwt.secret}")
-    private String secret;
+    private final String issuerName;
+    private final String secret;
+    private final Duration duration;
     private Algorithm algorithm;
     private JWTVerifier jwtVerifier;
-    @Value("${jwt.access-duration}")
-    private Duration duration;
+
+    public JwtTokenServiceImpl(String issuerName, String secret, Duration duration) {
+        this.secret = secret;
+        this.duration = duration;
+        this.issuerName = issuerName;
+    }
 
     @PostConstruct
     public void init() {
         algorithm = Algorithm.HMAC512(secret);
         jwtVerifier = JWT.require(algorithm)
-                .withIssuer(ISSUER_NAME)
+                .withIssuer(issuerName)
                 .build();
     }
 
@@ -39,7 +40,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     public JwtToken issue(Long userId, String refreshId) {
         ZonedDateTime expiringAt = nowPlusDuration();
         String token = JWT.create()
-                .withIssuer(ISSUER_NAME)
+                .withIssuer(issuerName)
                 .withSubject(Long.toString(userId))
                 .withExpiresAt(Date.from(expiringAt.toInstant()))
                 .withClaim(REFRESH_TOKEN_ID_CLAIM, refreshId)
