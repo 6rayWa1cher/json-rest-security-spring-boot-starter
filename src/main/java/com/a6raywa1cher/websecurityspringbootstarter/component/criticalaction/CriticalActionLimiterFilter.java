@@ -1,8 +1,6 @@
 package com.a6raywa1cher.websecurityspringbootstarter.component.criticalaction;
 
-import org.springframework.core.annotation.Order;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -11,15 +9,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
-
-@Component
-@Order(HIGHEST_PRECEDENCE)
 public class CriticalActionLimiterFilter extends OncePerRequestFilter {
     private final CriticalActionLimiterService service;
+    private final String retryAfterSeconds;
 
-    public CriticalActionLimiterFilter(CriticalActionLimiterService service) {
+    public CriticalActionLimiterFilter(CriticalActionLimiterService service, long retryAfterSeconds) {
         this.service = service;
+        this.retryAfterSeconds = Long.toString(retryAfterSeconds);
     }
 
     @Override
@@ -27,7 +23,7 @@ public class CriticalActionLimiterFilter extends OncePerRequestFilter {
         String ip = request.getRemoteAddr();
         if (service.isBlocked(ip)) {
             response.setStatus(429);
-            response.setHeader("Retry-After", "60");
+            response.setHeader("Retry-After", retryAfterSeconds);
             SecurityContextHolder.clearContext();
         } else {
             filterChain.doFilter(request, response);

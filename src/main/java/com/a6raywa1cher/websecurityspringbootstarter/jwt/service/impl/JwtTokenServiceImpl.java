@@ -36,7 +36,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     }
 
     @Override
-    public JwtToken issue(Long userId, Long refreshId) {
+    public JwtToken issue(Long userId, String refreshId) {
         ZonedDateTime expiringAt = nowPlusDuration();
         String token = JWT.create()
                 .withIssuer(ISSUER_NAME)
@@ -63,7 +63,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                     .token(token)
                     .uid(Long.parseLong(decodedJWT.getSubject()))
                     .expiringAt(decodedJWT.getExpiresAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
-                    .refreshId(decodedJWT.getClaim(REFRESH_TOKEN_ID_CLAIM).asLong());
+                    .refreshId(decodedJWT.getClaim(REFRESH_TOKEN_ID_CLAIM).asString());
             return Optional.of(builder.build());
         } catch (Exception e) {
             return Optional.empty();

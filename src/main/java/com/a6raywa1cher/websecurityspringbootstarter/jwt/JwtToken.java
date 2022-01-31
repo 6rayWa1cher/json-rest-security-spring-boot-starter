@@ -14,5 +14,5 @@ public class JwtToken {
 
     private long uid;
 
-    private long refreshId;
+    private String refreshId;
 }

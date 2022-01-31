@@ -5,7 +5,7 @@ import com.a6raywa1cher.websecurityspringbootstarter.jwt.JwtToken;
 import java.util.Optional;
 
 public interface JwtTokenService {
-    JwtToken issue(Long userId, Long refreshId);
+    JwtToken issue(Long userId, String refreshId);
 
     Optional<JwtToken> decode(String token);
 }

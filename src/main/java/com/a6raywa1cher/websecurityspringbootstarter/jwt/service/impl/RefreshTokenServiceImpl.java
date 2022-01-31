@@ -36,19 +36,21 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
 	@Override
 	public RefreshToken issue(AbstractUser user) {
-		List<RefreshToken> tokenList = repository.findAllByUser(user);
-		if (tokenList.size() > maxTokensPerUser) {
-			repository.deleteAllFromUser(user, tokenList.stream()
-					.sorted(Comparator.comparing(RefreshToken::getExpiringAt))
-					.limit(tokenList.size() - 5)
-					.peek(rt -> service.invalidate(rt.getId()))
-					.toList());
-		}
-		RefreshToken refreshToken = new RefreshToken();
-		refreshToken.setToken(UUID.randomUUID().toString());
-		refreshToken.setExpiringAt(LocalDateTime.now().plus(refreshTokenDuration));
-		return repository.save(user, refreshToken);
-	}
+        List<RefreshToken> tokenList = repository.findAllByUser(user);
+        if (tokenList.size() > maxTokensPerUser) {
+            repository.deleteAllFromUser(user, tokenList.stream()
+                    .sorted(Comparator.comparing(RefreshToken::expiringAt))
+                    .limit(tokenList.size() - 5)
+                    .peek(rt -> service.invalidate(rt.id()))
+                    .toList());
+        }
+        RefreshToken refreshToken = new RefreshToken(
+                UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
+                LocalDateTime.now().plus(refreshTokenDuration)
+        );
+        return repository.save(user, refreshToken);
+    }
 
 	@Override
 	public Optional<RefreshToken> getByToken(AbstractUser user, String token) {
@@ -57,14 +59,14 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
 	@Override
 	public void invalidate(AbstractUser user, RefreshToken refreshToken) {
-		service.invalidate(refreshToken.getId());
-		repository.delete(user, refreshToken);
+        service.invalidate(refreshToken.id());
+        repository.delete(user, refreshToken);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void invalidateAll(AbstractUser user) {
-		repository.findAllByUser(user)
-				.forEach(rt -> service.invalidate(rt.getId()));
+        repository.findAllByUser(user)
+                .forEach(rt -> service.invalidate(rt.id()));
 	}
 }

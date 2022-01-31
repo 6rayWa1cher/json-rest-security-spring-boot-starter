@@ -2,20 +2,16 @@ package com.a6raywa1cher.websecurityspringbootstarter.component.authority;
 
 import com.a6raywa1cher.websecurityspringbootstarter.component.checker.UserEnabledChecker;
 import com.a6raywa1cher.websecurityspringbootstarter.jpa.model.AbstractUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-@Component
 public class GrantedAuthorityServiceImpl implements GrantedAuthorityService {
 	private final UserEnabledChecker userEnabledChecker;
 
-	@Autowired
 	public GrantedAuthorityServiceImpl(UserEnabledChecker userEnabledChecker) {
 		this.userEnabledChecker = userEnabledChecker;
 	}

@@ -5,20 +5,20 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
-@Service
 @Slf4j
 public class CriticalActionLimiterService {
-    private static final int MAX_ATTEMPT = 6;
     private final LoadingCache<String, Integer> attemptsCache;
 
-    public CriticalActionLimiterService() {
-        super();
+    private final int maxAttempts;
+
+    public CriticalActionLimiterService(int maxAttempts, Duration blockDuration) {
+        this.maxAttempts = maxAttempts;
         attemptsCache = CacheBuilder.newBuilder()
-                .expireAfterWrite(1, TimeUnit.MINUTES).build(new CacheLoader<>() {
+                .expireAfterWrite(blockDuration)
+                .build(new CacheLoader<>() {
                     @Override
                     public Integer load(String key) {
                         return 0;
@@ -33,13 +33,13 @@ public class CriticalActionLimiterService {
     public void actionFailed(String key) {
         int attempts = attemptsCache.getUnchecked(key);
         attempts++;
-        if (attempts == MAX_ATTEMPT) {
+        if (attempts == maxAttempts) {
             log.warn("Blocked bad-behaved user " + key);
         }
         attemptsCache.put(key, attempts);
     }
 
     public boolean isBlocked(String key) {
-        return attemptsCache.getUnchecked(key) >= MAX_ATTEMPT;
+        return attemptsCache.getUnchecked(key) >= maxAttempts;
     }
 }

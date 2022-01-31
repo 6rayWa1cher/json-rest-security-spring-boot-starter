@@ -12,7 +12,7 @@ import java.time.Duration;
 
 @Service
 public class BlockedRefreshTokensServiceImpl implements BlockedRefreshTokensService {
-    private final LoadingCache<Long, Long> cache;
+    private final LoadingCache<String, String> cache;
 
     @Autowired
     public BlockedRefreshTokensServiceImpl(@Value("${jwt.access-duration}") Duration duration) {
@@ -20,19 +20,19 @@ public class BlockedRefreshTokensServiceImpl implements BlockedRefreshTokensServ
                 .expireAfterWrite(duration)
                 .build(new CacheLoader<>() {
                     @Override
-                    public Long load(Long key) {
+                    public String load(String key) {
                         return key;
                     }
                 });
     }
 
     @Override
-    public void invalidate(Long uuid) {
-        cache.put(uuid, uuid);
+    public void invalidate(String id) {
+        cache.put(id, id);
     }
 
     @Override
-    public boolean isValid(Long uuid) {
-        return cache.getIfPresent(uuid) == null;
+    public boolean isValid(String id) {
+        return cache.getIfPresent(id) == null;
     }
 }

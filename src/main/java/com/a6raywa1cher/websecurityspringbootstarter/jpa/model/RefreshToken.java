@@ -1,14 +1,7 @@
 package com.a6raywa1cher.websecurityspringbootstarter.jpa.model;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
 
-@Data
-public class RefreshToken {
-    private Long id;
+public record RefreshToken(String id, String token, LocalDateTime expiringAt) {
 
-    private String token;
-
-    private LocalDateTime expiringAt;
 }

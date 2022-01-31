@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.Duration;
 
-@ConfigurationProperties(prefix = "a6raywa1cher.web-auth")
+@ConfigurationProperties("web-security")
 @Validated
 @Data
 public class WebSecurityConfigProperties {
@@ -18,6 +18,8 @@ public class WebSecurityConfigProperties {
     private JwtConfigProperties jwt;
 
     private String[] corsAllowedOrigins = new String[0];
+
+    private boolean criticalActionLimiterEnable = true;
 
     @Data
     public static final class JwtConfigProperties {
