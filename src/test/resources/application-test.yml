@@ -1,0 +1,18 @@
+web-security:
+  jwt:
+    issuer-name: test-app
+    access-duration: PT5M
+    refresh-duration: P1D
+    secret: meow
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/web-security-spring-boot-starter-test
+    username: cat
+    password: cat
+  jpa:
+    show-sql: false
+    hibernate.ddl-auto: update
+    properties.hibernate.default_schema: public
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties.hibernate.current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+    properties.hibernate.temp.use_jdbc_metadata_defaults: false

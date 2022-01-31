@@ -15,10 +15,10 @@ import java.time.temporal.ChronoUnit;
 @Validated
 public class WebSecurityConfigProperties {
     @Valid
-    private JwtConfigProperties jwt;
+	private JwtConfigProperties jwt = new JwtConfigProperties();
 
-    @Valid
-    private CriticalActionLimiterConfigProperties criticalActionLimiter;
+	@Valid
+	private CriticalActionLimiterConfigProperties criticalActionLimiter = new CriticalActionLimiterConfigProperties();
 
     private String[] corsAllowedOrigins = new String[0];
 

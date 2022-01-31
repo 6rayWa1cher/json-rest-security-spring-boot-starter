@@ -20,12 +20,12 @@
         <java-jwt.version>3.18.3</java-jwt.version>
         <springdoc.version>1.6.5</springdoc.version>
         <hibernate-types.version>2.14.0</hibernate-types.version>
+        <junit.version>5.8.2</junit.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -54,6 +54,12 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -77,6 +83,11 @@
             <version>${hibernate-types.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
     <build>
