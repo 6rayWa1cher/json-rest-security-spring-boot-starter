@@ -7,15 +7,15 @@ import com.a6raywa1cher.websecurityspringbootstarter.dao.service.DefaultUserServ
 import com.a6raywa1cher.websecurityspringbootstarter.dao.service.UserService;
 import com.a6raywa1cher.websecurityspringbootstarter.web.PasswordEncoderAutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@AutoConfigureAfter(PasswordEncoderAutoConfiguration.class)
-@ConditionalOnBean(IUserRepository.class)
+@AutoConfigureAfter({PasswordEncoderAutoConfiguration.class, JpaRepositoriesAutoConfiguration.class})
+//@ConditionalOnBean(IUserRepository.class)
 public class WebSecurityDaoConfiguration {
     @Bean
     @ConditionalOnMissingBean(RefreshTokenRepository.class)

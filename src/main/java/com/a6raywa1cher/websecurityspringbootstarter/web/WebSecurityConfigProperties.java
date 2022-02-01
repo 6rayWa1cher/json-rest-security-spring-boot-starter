@@ -9,22 +9,23 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 
 @ConfigurationProperties("web-security")
 @Validated
 public class WebSecurityConfigProperties {
-    @Valid
+	@NotNull
+	@Valid
 	private JwtConfigProperties jwt = new JwtConfigProperties();
 
+	@NotNull
 	@Valid
 	private CriticalActionLimiterConfigProperties criticalActionLimiter = new CriticalActionLimiterConfigProperties();
 
     private String[] corsAllowedOrigins = new String[0];
 
-    private boolean enableDefaultWebConfig = true;
+	private boolean enableDefaultWebConfig;
 
-    private boolean enableAuthController = true;
+	private boolean enableAuthController;
 
     public WebSecurityConfigProperties() {
     }
@@ -109,13 +110,13 @@ public class WebSecurityConfigProperties {
     }
 
     public static final class CriticalActionLimiterConfigProperties {
-        private boolean enable = true;
+		private Boolean enable;
 
-        @Positive
-        private int maxAttempts = 5;
+		@Positive
+		private Integer maxAttempts;
 
-        @NotNull
-        private Duration blockDuration = Duration.of(1, ChronoUnit.MINUTES);
+		@NotNull
+		private Duration blockDuration;
 
         public CriticalActionLimiterConfigProperties() {
         }

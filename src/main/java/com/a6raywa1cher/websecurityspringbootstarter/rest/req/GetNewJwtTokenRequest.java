@@ -1,49 +1,61 @@
 package com.a6raywa1cher.websecurityspringbootstarter.rest.req;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 public class GetNewJwtTokenRequest {
-    @NotNull
-    @Size(min = 36, max = 36)
-    private String refreshToken;
+	@NotNull
+	@Size(min = 36, max = 36)
+	private String refreshToken;
 
-    public GetNewJwtTokenRequest() {
-    }
+	@NotNull
+	@Positive
+	private Long userId;
 
-    public @NotNull @Size(min = 36, max = 36) String getRefreshToken() {
-        return this.refreshToken;
-    }
+	public GetNewJwtTokenRequest(String refreshToken, Long userId) {
+		this.refreshToken = refreshToken;
+		this.userId = userId;
+	}
 
-    public void setRefreshToken(@NotNull @Size(min = 36, max = 36) String refreshToken) {
-        this.refreshToken = refreshToken;
-    }
+	public GetNewJwtTokenRequest() {
+	}
 
-    public boolean equals(final Object o) {
-        if (o == this) return true;
-        if (!(o instanceof GetNewJwtTokenRequest)) return false;
-        final GetNewJwtTokenRequest other = (GetNewJwtTokenRequest) o;
-        if (!other.canEqual((Object) this)) return false;
-        final Object this$refreshToken = this.getRefreshToken();
-        final Object other$refreshToken = other.getRefreshToken();
-        if (this$refreshToken == null ? other$refreshToken != null : !this$refreshToken.equals(other$refreshToken))
-            return false;
-        return true;
-    }
+	@Override
+	public String toString() {
+		return "GetNewJwtTokenRequest{" +
+			"refreshToken='" + refreshToken + '\'' +
+			", userId=" + userId +
+			'}';
+	}
 
-    protected boolean canEqual(final Object other) {
-        return other instanceof GetNewJwtTokenRequest;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		GetNewJwtTokenRequest that = (GetNewJwtTokenRequest) o;
+		return Objects.equals(refreshToken, that.refreshToken) && Objects.equals(userId, that.userId);
+	}
 
-    public int hashCode() {
-        final int PRIME = 59;
-        int result = 1;
-        final Object $refreshToken = this.getRefreshToken();
-        result = result * PRIME + ($refreshToken == null ? 43 : $refreshToken.hashCode());
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(refreshToken, userId);
+	}
 
-    public String toString() {
-        return "GetNewJwtTokenRequest(refreshToken=" + this.getRefreshToken() + ")";
-    }
+	public String getRefreshToken() {
+		return refreshToken;
+	}
+
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
 }

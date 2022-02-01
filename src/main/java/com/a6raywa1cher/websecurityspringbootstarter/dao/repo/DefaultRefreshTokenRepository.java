@@ -3,6 +3,7 @@ package com.a6raywa1cher.websecurityspringbootstarter.dao.repo;
 import com.a6raywa1cher.websecurityspringbootstarter.dao.model.IUser;
 import com.a6raywa1cher.websecurityspringbootstarter.dao.model.RefreshToken;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,10 +21,10 @@ public class DefaultRefreshTokenRepository implements RefreshTokenRepository {
 
     @Override
     public void deleteAllFromUser(IUser user, List<RefreshToken> listToDelete) {
-        List<String> idsToDelete = listToDelete.stream()
-                .map(RefreshToken::id)
-                .toList();
-        List<RefreshToken> refreshTokens = user.getRefreshTokens();
+		List<String> idsToDelete = listToDelete.stream()
+			.map(RefreshToken::id)
+			.toList();
+		List<RefreshToken> refreshTokens = new ArrayList<>(user.getRefreshTokens());
         refreshTokens.removeIf(rt -> idsToDelete.contains(rt.id()));
         user.setRefreshTokens(refreshTokens);
         userRepository.save(user);
@@ -31,7 +32,7 @@ public class DefaultRefreshTokenRepository implements RefreshTokenRepository {
 
     @Override
     public RefreshToken save(IUser user, RefreshToken refreshToken) {
-        List<RefreshToken> refreshTokens = user.getRefreshTokens();
+		List<RefreshToken> refreshTokens = new ArrayList<>(user.getRefreshTokens());
         refreshTokens.removeIf(rt -> rt.id().equals(refreshToken.id()));
         refreshTokens.add(refreshToken);
         user.setRefreshTokens(refreshTokens);
@@ -41,7 +42,7 @@ public class DefaultRefreshTokenRepository implements RefreshTokenRepository {
 
     @Override
     public Optional<RefreshToken> findByToken(IUser user, String token) {
-        List<RefreshToken> refreshTokens = user.getRefreshTokens();
+		List<RefreshToken> refreshTokens = new ArrayList<>(user.getRefreshTokens());
         return refreshTokens.stream()
                 .filter(rt -> rt.token().equals(token))
                 .findFirst();
@@ -49,8 +50,9 @@ public class DefaultRefreshTokenRepository implements RefreshTokenRepository {
 
     @Override
     public void delete(IUser user, RefreshToken refreshToken) {
-        List<RefreshToken> refreshTokens = user.getRefreshTokens();
-        refreshTokens.removeIf(rt -> rt.id().equals(refreshToken.id()));
-        userRepository.save(user);
+		List<RefreshToken> refreshTokens = new ArrayList<>(user.getRefreshTokens());
+		refreshTokens.removeIf(rt -> rt.id().equals(refreshToken.id()));
+		user.setRefreshTokens(refreshTokens);
+		userRepository.save(user);
     }
 }

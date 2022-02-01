@@ -14,10 +14,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -41,11 +38,16 @@ public class AuthController {
 		this.userService = userService;
 	}
 
+	@GetMapping("/check")
+	public ResponseEntity<?> check() {
+		return ResponseEntity.ok().build();
+	}
+
 	@PostMapping("/login")
 	@SecurityRequirements // erase jwt login
 	public ResponseEntity<JwtRefreshPair> convertToJwt(@RequestBody @Valid LoginRequest loginRequest,
 													   HttpServletRequest request) {
-		Optional<IUser> optional = userService.getByLoginAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
+		Optional<IUser> optional = userService.getByLoginAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
 		if (optional.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
@@ -59,20 +61,22 @@ public class AuthController {
 	@PostMapping("/get_access")
 	@SecurityRequirements // erase jwt login
 	public ResponseEntity<JwtRefreshPair> getNewJwtToken(@RequestBody @Valid GetNewJwtTokenRequest request) {
-		IUser user = authenticationResolver.getUser();
-		Optional<RefreshToken> optional = refreshTokenService.getByToken(user, request.getRefreshToken());
+		Optional<IUser> user = userService.getById(request.getUserId());
+		Optional<RefreshToken> optional = user.flatMap(
+			u -> refreshTokenService.getByToken(u, request.getRefreshToken())
+		);
 		if (optional.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
-		refreshTokenService.invalidate(user, optional.get());
-		return ResponseEntity.ok(jwtRefreshPairService.issue(user));
+		refreshTokenService.invalidate(user.get(), optional.get());
+		return ResponseEntity.ok(jwtRefreshPairService.issue(user.get()));
 	}
 
 	@DeleteMapping("/invalidate")
 	public ResponseEntity<Void> invalidateToken(@RequestBody @Valid InvalidateTokenRequest request) {
-		IUser user = authenticationResolver.getUser();
-		Optional<RefreshToken> optional = refreshTokenService.getByToken(user, request.getRefreshToken());
-		optional.ifPresent(refreshToken -> refreshTokenService.invalidate(user, refreshToken));
+		Optional<IUser> user = userService.getById(request.getUserId());
+		Optional<RefreshToken> optional = user.flatMap(u -> refreshTokenService.getByToken(u, request.getRefreshToken()));
+		optional.ifPresent(refreshToken -> refreshTokenService.invalidate(user.get(), refreshToken));
 		return ResponseEntity.ok().build();
 	}
 
