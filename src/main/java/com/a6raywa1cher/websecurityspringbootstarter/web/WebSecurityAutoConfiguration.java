@@ -1,5 +1,6 @@
 package com.a6raywa1cher.websecurityspringbootstarter.web;
 
+import com.a6raywa1cher.websecurityspringbootstarter.authentication.CustomAuthenticationEntryPoint;
 import com.a6raywa1cher.websecurityspringbootstarter.component.authority.GrantedAuthorityService;
 import com.a6raywa1cher.websecurityspringbootstarter.component.authority.GrantedAuthorityServiceImpl;
 import com.a6raywa1cher.websecurityspringbootstarter.component.checker.DefaultUserEnabledChecker;
@@ -22,6 +23,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -42,7 +44,8 @@ import java.util.Collections;
 
 @Configuration
 @EnableConfigurationProperties(WebSecurityConfigProperties.class)
-@AutoConfigureAfter({PasswordEncoderAutoConfiguration.class, WebSecurityDaoConfiguration.class, AuthenticationEntryPointConfiguration.class})
+@AutoConfigureAfter({WebSecurityDaoConfiguration.class})
+@Import(PasswordEncoderConfiguration.class)
 public class WebSecurityAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(CorsConfigurationSource.class)
@@ -65,25 +68,31 @@ public class WebSecurityAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(UserEnabledChecker.class)
-    public UserEnabledChecker userEnabledChecker() {
-        return new DefaultUserEnabledChecker();
-    }
+	@ConditionalOnMissingBean(UserEnabledChecker.class)
+	public UserEnabledChecker userEnabledChecker() {
+		return new DefaultUserEnabledChecker();
+	}
 
-    @Bean
-    @ConditionalOnMissingBean(GrantedAuthorityService.class)
-    public GrantedAuthorityService grantedAuthorityService(UserEnabledChecker userEnabledChecker) {
-        return new GrantedAuthorityServiceImpl(userEnabledChecker);
-    }
+	@Bean
+	@ConditionalOnMissingBean(GrantedAuthorityService.class)
+	public GrantedAuthorityService grantedAuthorityService(UserEnabledChecker userEnabledChecker) {
+		return new GrantedAuthorityServiceImpl(userEnabledChecker);
+	}
 
-    @Configuration
-    @Order(-1)
-    @ConditionalOnProperty(prefix = "web-security", value = "enable-default-web-config")
-    @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-    public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
-        private final UserService userService;
+	@Bean
+	@ConditionalOnMissingBean(AuthenticationEntryPoint.class)
+	public AuthenticationEntryPoint authenticationEntryPoint() {
+		return new CustomAuthenticationEntryPoint();
+	}
 
-        private final WebSecurityConfigProperties webSecurityConfigProperties;
+	@Configuration
+	@Order(-1)
+	@ConditionalOnProperty(prefix = "web-security", value = "enable-default-web-config")
+	@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+	public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
+		private final UserService userService;
+
+		private final WebSecurityConfigProperties webSecurityConfigProperties;
 
         private final JwtTokenService jwtTokenService;
 
