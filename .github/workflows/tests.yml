@@ -36,7 +36,7 @@ jobs:
 
       - name: Setup Maven
         run: mvn --batch-mode --update-snapshots compile
-      - name: Run tests
+      - name: Run tests & verify
         env:
           POSTGRES_DATABASE: postgres
         run: mvn verify
