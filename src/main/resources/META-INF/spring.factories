@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.a6raywa1cher.websecurityspringbootstarter.web.WebSecurityAutoConfiguration
+  com.a6raywa1cher.jsonrestsecurity.JsonRestSecurityAutoConfiguration
