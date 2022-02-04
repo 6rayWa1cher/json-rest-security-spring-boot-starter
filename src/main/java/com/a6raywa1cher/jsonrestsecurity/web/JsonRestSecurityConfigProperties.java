@@ -27,15 +27,17 @@ public class JsonRestSecurityConfigProperties {
 
 	private boolean enableAuthController;
 
+	private boolean enable;
+
 	public JsonRestSecurityConfigProperties() {
 	}
 
-    public @Valid JwtConfigProperties getJwt() {
-        return this.jwt;
-    }
+	public @Valid JwtConfigProperties getJwt() {
+		return this.jwt;
+	}
 
-    public void setJwt(@Valid JwtConfigProperties jwt) {
-        this.jwt = jwt;
+	public void setJwt(@Valid JwtConfigProperties jwt) {
+		this.jwt = jwt;
     }
 
     public @Valid CriticalActionLimiterConfigProperties getCriticalActionLimiter() {

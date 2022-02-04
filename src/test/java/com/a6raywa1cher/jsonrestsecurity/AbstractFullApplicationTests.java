@@ -3,7 +3,7 @@ package com.a6raywa1cher.jsonrestsecurity;
 import com.a6raywa1cher.jsonrestsecurity.dao.model.AbstractUser;
 import com.a6raywa1cher.jsonrestsecurity.dao.repo.IUserRepository;
 import com.a6raywa1cher.jsonrestsecurity.jwt.JwtRefreshPair;
-import com.a6raywa1cher.jsonrestsecurity.web.DefaultWebSecurityConfigurer;
+import com.a6raywa1cher.jsonrestsecurity.web.JsonRestWebSecurityConfigurer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
@@ -16,8 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.a6raywa1cher.jsonrestsecurity.TestUtils.basic;
-import static com.a6raywa1cher.jsonrestsecurity.TestUtils.jwt;
+import static com.a6raywa1cher.jsonrestsecurity.TestUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -25,8 +24,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 public abstract class AbstractFullApplicationTests<T extends AbstractUser> {
-	final String USERNAME = "abcdef";
-	final String PASSWORD = "qwerty";
+	protected final String USERNAME = "abcdef";
+	protected final String PASSWORD = "qwerty";
 	@Autowired
 	protected ApplicationContext ctx;
 	@Autowired
@@ -46,7 +45,7 @@ public abstract class AbstractFullApplicationTests<T extends AbstractUser> {
 	@Test
 	void beansArePresent() {
 		assertThat(ctx.containsBean("authController")).isTrue();
-		assertThat(ctx.getBeanNamesForType(DefaultWebSecurityConfigurer.class)).hasSize(1);
+		assertThat(ctx.getBeanNamesForType(JsonRestWebSecurityConfigurer.class)).hasSize(1);
 		assertThat(ctx.containsBean("criticalActionLimiterFilter")).isTrue();
 	}
 
@@ -151,5 +150,17 @@ public abstract class AbstractFullApplicationTests<T extends AbstractUser> {
 			)
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.cookies").value(true));
+	}
+
+	@Test
+	void criticalActionLimiterTest() throws Exception {
+		for (int i = 0; i < 5; i++) {
+			mvc.perform(get("/home").with(remoteHost("127.5.0.1")))
+				.andExpect(status().isUnauthorized());
+		}
+		mvc.perform(get("/home").with(remoteHost("127.5.0.1")))
+			.andExpect(status().isTooManyRequests());
+		mvc.perform(get("/home").with(remoteHost("127.5.0.2")))
+			.andExpect(status().isUnauthorized());
 	}
 }

@@ -26,12 +26,13 @@ public class CriticalActionLimiterFilter extends OncePerRequestFilter {
             response.setHeader("Retry-After", retryAfterSeconds);
             SecurityContextHolder.clearContext();
         } else {
-            filterChain.doFilter(request, response);
-            if (response.getStatus() == HttpServletResponse.SC_FORBIDDEN) {
-                service.actionFailed(ip);
-            } else {
-                service.actionSucceed(ip);
-            }
-        }
+			filterChain.doFilter(request, response);
+			if (response.getStatus() == HttpServletResponse.SC_FORBIDDEN ||
+				response.getStatus() == HttpServletResponse.SC_UNAUTHORIZED) {
+				service.actionFailed(ip);
+			} else {
+				service.actionSucceed(ip);
+			}
+		}
     }
 }
