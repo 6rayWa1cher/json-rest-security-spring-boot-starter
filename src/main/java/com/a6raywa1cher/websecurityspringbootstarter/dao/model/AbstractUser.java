@@ -1,5 +1,6 @@
 package com.a6raywa1cher.websecurityspringbootstarter.dao.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
@@ -29,11 +30,13 @@ public abstract class AbstractUser implements IUser {
     @Column(name = "user_role", nullable = false)
     private String userRole;
 
-    @Column(name = "password")
+	@Column(name = "password")
+	@JsonIgnore
     private String password;
 
     @Column(name = "refresh_tokens", columnDefinition = "jsonb")
-    @Type(type = "json")
+	@Type(type = "json")
+	@JsonIgnore
     private List<RefreshToken> refreshTokens;
 
     @Column(name = "last_visit_at")

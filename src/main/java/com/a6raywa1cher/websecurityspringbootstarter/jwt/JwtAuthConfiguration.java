@@ -10,51 +10,55 @@ import com.a6raywa1cher.websecurityspringbootstarter.jwt.service.impl.BlockedRef
 import com.a6raywa1cher.websecurityspringbootstarter.jwt.service.impl.JwtRefreshPairServiceImpl;
 import com.a6raywa1cher.websecurityspringbootstarter.jwt.service.impl.JwtTokenServiceImpl;
 import com.a6raywa1cher.websecurityspringbootstarter.jwt.service.impl.RefreshTokenServiceImpl;
+import com.a6raywa1cher.websecurityspringbootstarter.utils.RandomUtils;
 import com.a6raywa1cher.websecurityspringbootstarter.web.WebSecurityConfigProperties;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import com.a6raywa1cher.websecurityspringbootstarter.web.WebSecurityPropertiesConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.transaction.TransactionAutoConfiguration;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import java.util.Objects;
+
+import static com.a6raywa1cher.websecurityspringbootstarter.utils.LogUtils.log;
+
 @Configuration
-@AutoConfigureBefore({TransactionAutoConfiguration.class})
-@AutoConfigureAfter({WebSecurityDaoConfiguration.class})
 @EnableTransactionManagement
-@EnableConfigurationProperties({
-        WebSecurityConfigProperties.class
-})
-public class JwtAuthAutoConfiguration {
-    private final WebSecurityConfigProperties.JwtConfigProperties properties;
+@Import({WebSecurityPropertiesConfiguration.class, WebSecurityDaoConfiguration.class})
+public class JwtAuthConfiguration {
+	private final WebSecurityConfigProperties.JwtConfigProperties properties;
 
-    public JwtAuthAutoConfiguration(WebSecurityConfigProperties properties) {
-        this.properties = properties.getJwt();
+	public JwtAuthConfiguration(WebSecurityConfigProperties properties) {
+		this.properties = properties.getJwt();
+	}
+
+	@Bean
+	@ConditionalOnMissingBean(type = "BlockedRefreshTokensService")
+	public BlockedRefreshTokensService blockedRefreshTokensService() {
+		return new BlockedRefreshTokensServiceImpl(properties.getRefreshDuration());
     }
 
-    @Bean
-    @ConditionalOnMissingBean(BlockedRefreshTokensService.class)
-    public BlockedRefreshTokensService blockedRefreshTokensService() {
-        return new BlockedRefreshTokensServiceImpl(properties.getRefreshDuration());
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(JwtTokenService.class)
+	@Bean
+	@ConditionalOnMissingBean(type = "JwtTokenService")
     public JwtTokenService jwtTokenService() {
-        return new JwtTokenServiceImpl(
-                properties.getIssuerName(),
-                properties.getSecret(),
-                properties.getAccessDuration()
-        );
-    }
+		String secret = properties.getSecret();
+		if (Objects.equals(secret, "generated")) {
+			log.warn("\n\n\nUsing auto-generated JWT secret will cause every token to become invalid after an application restart!\nSet web-security.jwt.secret property (for example, visit this website: https://www.grc.com/passwords.htm )\n\n\n");
+			secret = RandomUtils.randomString(128);
+		}
+		return new JwtTokenServiceImpl(
+			properties.getIssuerName(),
+			secret,
+			properties.getAccessDuration()
+		);
+	}
 
-    @Bean
-    @ConditionalOnBean(RefreshTokenRepository.class)
-    @ConditionalOnMissingBean(RefreshTokenService.class)
-    public RefreshTokenService refreshTokenService(
+	@Bean
+	@DependsOn("refreshTokenRepository")
+	@ConditionalOnMissingBean(type = "RefreshTokenService")
+	public RefreshTokenService refreshTokenService(
             RefreshTokenRepository repository, BlockedRefreshTokensService service
     ) {
         return new RefreshTokenServiceImpl(
@@ -65,8 +69,8 @@ public class JwtAuthAutoConfiguration {
         );
     }
 
-    @Bean
-    @ConditionalOnMissingBean(JwtRefreshPairService.class)
+	@Bean
+	@ConditionalOnMissingBean(type = "JwtRefreshPairService")
     public JwtRefreshPairService jwtRefreshPairService(
             JwtTokenService jwtTokenService, RefreshTokenService refreshTokenService
     ) {

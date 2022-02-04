@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.a6raywa1cher</groupId>
     <artifactId>web-security-spring-boot-starter</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>web-security-spring-boot-starter</name>
     <description>web-security-spring-boot-starter</description>
     <properties>
@@ -13,7 +13,6 @@
         <java-jwt.version>3.18.3</java-jwt.version>
         <springdoc.version>1.6.5</springdoc.version>
         <hibernate-types.version>2.14.0</hibernate-types.version>
-        <!--        <junit.version>5.8.2</junit.version>-->
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
@@ -49,12 +48,6 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>org.junit.jupiter</groupId>-->
-        <!--            <artifactId>junit-jupiter-engine</artifactId>-->
-        <!--            <scope>test</scope>-->
-        <!--        </dependency>-->
-
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-common</artifactId>

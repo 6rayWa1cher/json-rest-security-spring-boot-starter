@@ -1,12 +1,13 @@
 package com.a6raywa1cher.websecurityspringbootstarter.dao.repo;
 
 import com.a6raywa1cher.websecurityspringbootstarter.dao.model.IUser;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.NoRepositoryBean;
 
 import java.util.Optional;
 
-@NoRepositoryBean
-public interface IUserRepository<T extends IUser> extends CrudRepository<T, Long> {
-    Optional<T> findByUsername(String username);
+public interface IUserRepository<T extends IUser> {
+	Optional<T> findByUsername(String username);
+
+	<S extends T> S save(S s);
+
+	Optional<T> findById(Long id);
 }

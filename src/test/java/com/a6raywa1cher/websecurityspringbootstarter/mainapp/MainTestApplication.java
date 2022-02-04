@@ -1,11 +1,11 @@
-package com.a6raywa1cher.websecurityspringbootstarter;
+package com.a6raywa1cher.websecurityspringbootstarter.mainapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TestApplication {
+public class MainTestApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(TestApplication.class, args);
+		SpringApplication.run(MainTestApplication.class, args);
 	}
 }

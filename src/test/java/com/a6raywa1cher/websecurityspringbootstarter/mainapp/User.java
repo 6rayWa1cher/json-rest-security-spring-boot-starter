@@ -1,4 +1,4 @@
-package com.a6raywa1cher.websecurityspringbootstarter;
+package com.a6raywa1cher.websecurityspringbootstarter.mainapp;
 
 import com.a6raywa1cher.websecurityspringbootstarter.dao.model.AbstractUser;
 

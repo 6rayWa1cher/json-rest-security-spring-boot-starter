@@ -1,4 +1,4 @@
-package com.a6raywa1cher.websecurityspringbootstarter;
+package com.a6raywa1cher.websecurityspringbootstarter.defaultapp;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/home")
-public class TestEndpoint {
+public class DefaultTestEndpoint {
 	private final ObjectMapper objectMapper;
 
-	public TestEndpoint(ObjectMapper objectMapper) {
+	public DefaultTestEndpoint(ObjectMapper objectMapper) {
 		this.objectMapper = objectMapper;
 	}
 

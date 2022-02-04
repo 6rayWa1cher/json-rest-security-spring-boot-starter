@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_POST:5432}/${POSTGRES_DATABASE:web-security-spring-boot-starter-test}
+    username: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+  jpa:
+    show-sql: false
+    hibernate.ddl-auto: create
+    properties.hibernate.default_schema: public
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties.hibernate.current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+    properties.hibernate.temp.use_jdbc_metadata_defaults: false
