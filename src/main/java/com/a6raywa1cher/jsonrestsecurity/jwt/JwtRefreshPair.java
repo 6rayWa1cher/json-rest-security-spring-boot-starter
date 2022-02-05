@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
+/**
+ * DTO object with access/refresh tokens and misc info
+ */
 public class JwtRefreshPair {
 	private String refreshToken;
 

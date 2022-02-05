@@ -37,7 +37,6 @@ public class FailLimiterConfiguration {
 	 * The max cache size is being taken from {@code json-rest-security.fail-limiter.max-cache-size} property (by default 30000).
 	 *
 	 * @return FailLimiterService bean
-	 * @see LoadingCacheFailLimiterService
 	 */
 	@Bean
 	@ConditionalOnMissingBean(FailLimiterService.class)

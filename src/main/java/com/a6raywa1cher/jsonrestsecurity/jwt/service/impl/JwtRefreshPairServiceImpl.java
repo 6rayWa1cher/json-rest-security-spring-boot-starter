@@ -10,6 +10,11 @@ import com.a6raywa1cher.jsonrestsecurity.jwt.service.RefreshTokenService;
 
 import java.time.OffsetDateTime;
 
+/**
+ * The default implementation of {@link JwtRefreshPairService}.
+ *
+ * @see com.a6raywa1cher.jsonrestsecurity.jwt.JwtAuthConfiguration
+ */
 public class JwtRefreshPairServiceImpl implements JwtRefreshPairService {
 	private final RefreshTokenService refreshTokenService;
 

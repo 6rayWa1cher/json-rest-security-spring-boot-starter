@@ -6,9 +6,9 @@ import com.a6raywa1cher.jsonrestsecurity.jwt.service.BlockedRefreshTokensService
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.JwtRefreshPairService;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.JwtTokenService;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.RefreshTokenService;
-import com.a6raywa1cher.jsonrestsecurity.jwt.service.impl.BlockedRefreshTokensServiceImpl;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.impl.JwtRefreshPairServiceImpl;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.impl.JwtTokenServiceImpl;
+import com.a6raywa1cher.jsonrestsecurity.jwt.service.impl.LoadingCacheBlockedRefreshTokensService;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.impl.RefreshTokenServiceImpl;
 import com.a6raywa1cher.jsonrestsecurity.utils.RandomUtils;
 import com.a6raywa1cher.jsonrestsecurity.web.JsonRestSecurityConfigProperties;
@@ -24,6 +24,9 @@ import java.util.Objects;
 
 import static com.a6raywa1cher.jsonrestsecurity.utils.LogUtils.log;
 
+/**
+ * Configures all beans from {@link com.a6raywa1cher.jsonrestsecurity.jwt} package.
+ */
 @Configuration
 @EnableTransactionManagement
 @Import({JsonRestSecurityPropertiesConfiguration.class, DaoConfiguration.class})
@@ -34,12 +37,27 @@ public class JwtAuthConfiguration {
 		this.properties = properties.getJwt();
 	}
 
+	/**
+	 * Creates the {@link BlockedRefreshTokensService} bean with {@link LoadingCacheBlockedRefreshTokensService} implementation.
+	 * <br/>
+	 * Access token life duration is being taken from {@code json-rest-security.jwt.access-duration} property (default 5 minutes).
+	 *
+	 * @return BlockedRefreshTokensService bean
+	 */
 	@Bean
 	@ConditionalOnMissingBean(BlockedRefreshTokensService.class)
 	public BlockedRefreshTokensService blockedRefreshTokensService() {
-		return new BlockedRefreshTokensServiceImpl(properties.getRefreshDuration());
+		return new LoadingCacheBlockedRefreshTokensService(properties.getAccessDuration());
 	}
 
+	/**
+	 * Creates the {@link JwtTokenService} bean with {@link JwtTokenServiceImpl} implementation.
+	 * <br/>
+	 * JWT secret is being taken from {@code json-rest-security.jwt.secret} property. If the property value
+	 * is {@code "generate"}, then the JWT secret will be generated.
+	 *
+	 * @return JwtTokenService bean
+	 */
 	@Bean
 	@ConditionalOnMissingBean(JwtTokenService.class)
 	public JwtTokenService jwtTokenService() {
@@ -55,6 +73,19 @@ public class JwtAuthConfiguration {
 		);
 	}
 
+	/**
+	 * Creates the {@link RefreshTokenService} bean with {@link RefreshTokenServiceImpl} implementation.
+	 * <br/>
+	 * Max refresh token count per user is being taken from {@code json-rest-security.jwt.max-refresh-tokens-per-user}
+	 * property (default is 10).
+	 * <br/>
+	 * Refresh token life duration is being taken from {@code json-rest-security.jwt.refresh-duration} property
+	 * (default 14 days).
+	 *
+	 * @param repository RefreshTokenRepository bean
+	 * @param service    BlockedRefreshTokensService bean
+	 * @return RefreshTokenService bean
+	 */
 	@Bean
 	@DependsOn("refreshTokenRepository")
 	@ConditionalOnMissingBean(RefreshTokenService.class)
@@ -69,6 +100,13 @@ public class JwtAuthConfiguration {
 		);
 	}
 
+	/**
+	 * Creates the {@link JwtRefreshPairService} bean with {@link JwtRefreshPairServiceImpl} implementation.
+	 *
+	 * @param jwtTokenService     JwtTokenService bean
+	 * @param refreshTokenService RefreshTokenService bean
+	 * @return JwtRefreshPairService bean
+	 */
 	@Bean
 	@ConditionalOnMissingBean(JwtRefreshPairService.class)
 	public JwtRefreshPairService jwtRefreshPairService(

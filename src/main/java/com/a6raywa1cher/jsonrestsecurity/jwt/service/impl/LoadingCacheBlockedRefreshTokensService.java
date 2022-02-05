@@ -7,10 +7,17 @@ import com.google.common.cache.LoadingCache;
 
 import java.time.Duration;
 
-public class BlockedRefreshTokensServiceImpl implements BlockedRefreshTokensService {
+/**
+ * The default implementation of {@link BlockedRefreshTokensService}.
+ * <br/>
+ * Uses {@link LoadingCache} for storage. Can potentially crash the JVM on a DoS attack with {@code OutOfMemoryError}.
+ *
+ * @see com.a6raywa1cher.jsonrestsecurity.jwt.JwtAuthConfiguration
+ */
+public class LoadingCacheBlockedRefreshTokensService implements BlockedRefreshTokensService {
 	private final LoadingCache<String, String> cache;
 
-	public BlockedRefreshTokensServiceImpl(Duration duration) {
+	public LoadingCacheBlockedRefreshTokensService(Duration duration) {
 		cache = CacheBuilder.newBuilder()
 			.expireAfterWrite(duration)
 			.build(new CacheLoader<>() {

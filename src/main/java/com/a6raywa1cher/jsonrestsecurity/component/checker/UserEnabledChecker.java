@@ -10,6 +10,7 @@ import com.a6raywa1cher.jsonrestsecurity.dao.model.IUser;
  * <br/>
  *
  * @see DefaultUserEnabledChecker
+ * @see com.a6raywa1cher.jsonrestsecurity.component.authority.GrantedAuthorityServiceImpl
  */
 public interface UserEnabledChecker {
 	boolean check(IUser user);

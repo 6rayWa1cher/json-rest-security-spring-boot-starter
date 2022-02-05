@@ -16,18 +16,23 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * The default implementation of {@link RefreshTokenService}.
+ *
+ * @see com.a6raywa1cher.jsonrestsecurity.jwt.JwtAuthConfiguration
+ */
 @Transactional
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 	private final RefreshTokenRepository repository;
-	private final BlockedRefreshTokensService service;
+	private final BlockedRefreshTokensService blockedTokensService;
 	private final long maxTokensPerUser;
 	private final Duration refreshTokenDuration;
 
-	public RefreshTokenServiceImpl(RefreshTokenRepository repository, BlockedRefreshTokensService service,
+	public RefreshTokenServiceImpl(RefreshTokenRepository repository, BlockedRefreshTokensService blockedTokensService,
 								   @Value("${jwt.max-refresh-tokens-per-user}") Long maxTokensPerUser,
 								   @Value("${jwt.refresh-duration}") Duration refreshTokenDuration) {
 		this.repository = repository;
-		this.service = service;
+		this.blockedTokensService = blockedTokensService;
 		this.maxTokensPerUser = maxTokensPerUser;
 		this.refreshTokenDuration = refreshTokenDuration;
 	}
@@ -38,8 +43,8 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 		if (tokenList.size() > maxTokensPerUser) {
 			repository.deleteAllFromUser(user, tokenList.stream()
 				.sorted(Comparator.comparing(RefreshToken::expiringAt))
-				.limit(tokenList.size() - 5)
-				.peek(rt -> service.invalidate(rt.id()))
+				.limit(tokenList.size() - maxTokensPerUser)
+				.peek(rt -> blockedTokensService.invalidate(rt.id()))
 				.toList());
 		}
 		RefreshToken refreshToken = new RefreshToken(
@@ -56,8 +61,9 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void invalidate(IUser user, RefreshToken refreshToken) {
-		service.invalidate(refreshToken.id());
+		blockedTokensService.invalidate(refreshToken.id());
 		repository.delete(user, refreshToken);
 	}
 
@@ -65,6 +71,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void invalidateAll(IUser user) {
 		repository.findAllByUser(user)
-			.forEach(rt -> service.invalidate(rt.id()));
+			.forEach(rt -> blockedTokensService.invalidate(rt.id()));
 	}
 }

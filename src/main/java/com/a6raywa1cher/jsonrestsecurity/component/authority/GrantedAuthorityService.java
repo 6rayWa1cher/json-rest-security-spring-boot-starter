@@ -7,8 +7,12 @@ import java.util.Collection;
 
 /**
  * Provides the list of {@link GrantedAuthority} owned by the user.
+ * <br/>
+ * Used by custom authentication providers to calculate granted authorities of users.
  *
  * @see GrantedAuthorityServiceImpl
+ * @see com.a6raywa1cher.jsonrestsecurity.providers.JwtAuthenticationProvider
+ * @see com.a6raywa1cher.jsonrestsecurity.providers.UsernamePasswordAuthenticationProvider
  */
 public interface GrantedAuthorityService {
 	/**

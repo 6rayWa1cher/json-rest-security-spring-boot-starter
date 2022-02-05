@@ -9,11 +9,43 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 import javax.annotation.PostConstruct;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Optional;
 
+/**
+ * The default implementation of {@link JwtTokenService}.
+ * <br/>
+ * Works on {@link com.auth0.jwt.JWT} by auth0. Uses HMAC512 signature algorithm.
+ * <br/>
+ * Example of the issued JWT (decoded):
+ * <br/>
+ * Header:
+ * <code>
+ * <pre>
+ * {
+ *   "typ": "JWT",
+ *   "alg": "HS512"
+ * }
+ * </pre>
+ * </code>
+ * Payload:
+ * <code>
+ * <pre>
+ * {
+ *   "sub": "1",
+ *   "rti": "38f726e6-756c-4bd7-8352-78e8cd6017d0",
+ *   "iss": "test-app",
+ *   "exp": 1644070560
+ * }
+ * </pre>
+ * </code>
+ * In payload {@code rti} is the refresh token id.
+ *
+ * @see com.a6raywa1cher.jsonrestsecurity.jwt.JwtAuthConfiguration
+ */
 public class JwtTokenServiceImpl implements JwtTokenService {
 	private final static String REFRESH_TOKEN_ID_CLAIM = "rti";
 	private final String issuerName;
@@ -45,11 +77,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 			.withExpiresAt(Date.from(expiringAt.toInstant()))
 			.withClaim(REFRESH_TOKEN_ID_CLAIM, refreshId)
 			.sign(algorithm);
-		return JwtToken.builder()
-			.token(token)
-			.uid(userId)
-			.expiringAt(expiringAt.toLocalDateTime())
-			.build();
+		return new JwtToken(token, expiringAt.toLocalDateTime(), userId, refreshId);
 	}
 
 	private ZonedDateTime nowPlusDuration() {
@@ -60,12 +88,10 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 	public Optional<JwtToken> decode(String token) {
 		try {
 			DecodedJWT decodedJWT = jwtVerifier.verify(token);
-			JwtToken.JwtTokenBuilder builder = JwtToken.builder()
-				.token(token)
-				.uid(Long.parseLong(decodedJWT.getSubject()))
-				.expiringAt(decodedJWT.getExpiresAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
-				.refreshId(decodedJWT.getClaim(REFRESH_TOKEN_ID_CLAIM).asString());
-			return Optional.of(builder.build());
+			long userId = Long.parseLong(decodedJWT.getSubject());
+			LocalDateTime expiringAt = decodedJWT.getExpiresAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+			String refreshId = decodedJWT.getClaim(REFRESH_TOKEN_ID_CLAIM).asString();
+			return Optional.of(new JwtToken(token, expiringAt, userId, refreshId));
 		} catch (Exception e) {
 			return Optional.empty();
 		}

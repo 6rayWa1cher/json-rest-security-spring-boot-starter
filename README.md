@@ -1,6 +1,7 @@
 # json-rest-security-spring-boot-starter
 
-[![Actions Status](https://github.com/6rayWa1cher/json-rest-security-spring-boot-starter/actions/workflows/tests.yml/badge.svg)](https://github.com/6rayWa1cher/json-rest-security-spring-boot-starter/actions/workflows/tests.yml)  
+[![Actions Status](https://github.com/6rayWa1cher/json-rest-security-spring-boot-starter/actions/workflows/tests.yml/badge.svg)](https://github.com/6rayWa1cher/json-rest-security-spring-boot-starter/actions/workflows/tests.yml)
+[![codecov](https://codecov.io/gh/6rayWa1cher/json-rest-security-spring-boot-starter/branch/master/graph/badge.svg?token=XTXEC698X8)](https://codecov.io/gh/6rayWa1cher/json-rest-security-spring-boot-starter)  
 Basic security enclosure for JSON REST backends on Spring Boot WebMvc
 
 ## About

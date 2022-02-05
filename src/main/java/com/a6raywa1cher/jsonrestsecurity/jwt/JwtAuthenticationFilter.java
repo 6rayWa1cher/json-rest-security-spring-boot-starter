@@ -16,6 +16,17 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * Provides the access token authentication hook for a Spring WebMvc application.
+ * <br/>
+ * The filter looks for the authentication header in the request and checks if auth type is {@code jwt} or
+ * {@code bearer}. Then it creates a non-authenticated {@link JwtAuthentication} with {@link JwtTokenService} assist
+ * and invokes {@link AuthenticationManager} for further process. If authentication is successful, the filter
+ * injects the authenticated {@link JwtAuthentication} into {@link SecurityContextHolder}.
+ * <br/>
+ *
+ * @see com.a6raywa1cher.jsonrestsecurity.web.JsonRestWebSecurityConfigurer
+ */
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private static final String AUTHORIZATION_HEADER = "Authorization";
 	private final JwtTokenService jwtTokenService;
@@ -26,6 +37,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		this.authenticationManager = authenticationManager;
 	}
 
+	/**
+	 * Extracts the non-authenticated {@link JwtAuthentication} from request.
+	 * <br/>
+	 * Supports only {@code jwt} and {@code bearer} prefixes.
+	 *
+	 * @param request  HttpServletRequest instance
+	 * @param response HttpServletResponse instance
+	 * @return JwtAuthentication or null
+	 * @throws AuthenticationException if the token was found but {@link #jwtTokenService} couldn't extract/validate it.
+	 */
 	private Authentication check(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 		if (request.getHeader(AUTHORIZATION_HEADER) == null) {
 			return null;

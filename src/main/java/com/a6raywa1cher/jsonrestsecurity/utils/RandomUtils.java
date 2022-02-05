@@ -4,8 +4,8 @@ import java.security.SecureRandom;
 
 // https://stackoverflow.com/a/157202
 public class RandomUtils {
-	static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-	static SecureRandom rnd = new SecureRandom();
+	private static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	private static final SecureRandom rnd = new SecureRandom();
 
 	public static String randomString(int len) {
 		StringBuilder sb = new StringBuilder(len);

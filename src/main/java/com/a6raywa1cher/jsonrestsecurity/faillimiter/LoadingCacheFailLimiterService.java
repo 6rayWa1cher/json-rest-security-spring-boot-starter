@@ -4,6 +4,7 @@ package com.a6raywa1cher.jsonrestsecurity.faillimiter;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.cache.RemovalCause;
 
 import java.time.Duration;
 
@@ -38,7 +39,11 @@ public class LoadingCacheFailLimiterService implements FailLimiterService {
 			.expireAfterWrite(blockDuration)
 			.softValues()
 			.maximumSize(maxSize)
-			.removalListener((n) -> log.info("Unblocked user " + n.getKey()))
+			.removalListener((n) -> {
+				if (n.getCause() == RemovalCause.EXPIRED) {
+					log.info("Unblocked user " + n.getKey());
+				}
+			})
 			.build(new CacheLoader<>() {
 				@Override
 				public Integer load(String key) {

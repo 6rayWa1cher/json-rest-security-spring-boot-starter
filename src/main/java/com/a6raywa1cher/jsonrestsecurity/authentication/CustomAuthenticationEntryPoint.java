@@ -6,11 +6,12 @@ import org.springframework.security.authentication.InsufficientAuthenticationExc
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
+
+import static com.a6raywa1cher.jsonrestsecurity.utils.LogUtils.log;
 
 /**
  * The default implementation of {@link AuthenticationEntryPoint}.
@@ -24,7 +25,7 @@ import java.util.Objects;
  */
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 	@Override
-	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
 		if (authException instanceof BadCredentialsException ||
 			(
 				authException instanceof InsufficientAuthenticationException &&
@@ -32,9 +33,11 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 			)
 		) {
 			response.setHeader("WWW-Authenticate", "FormBased");
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
+			log.debug(authException.getMessage());
+			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 		} else {
-			response.sendError(HttpServletResponse.SC_FORBIDDEN, authException.getMessage());
+			log.debug(authException.getMessage());
+			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 		}
 	}
 }
