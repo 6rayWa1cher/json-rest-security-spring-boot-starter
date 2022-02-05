@@ -6,8 +6,6 @@ import com.a6raywa1cher.jsonrestsecurity.dao.repo.RefreshTokenRepository;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.BlockedRefreshTokensService;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.RefreshTokenService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -21,7 +19,6 @@ import java.util.UUID;
  *
  * @see com.a6raywa1cher.jsonrestsecurity.jwt.JwtAuthConfiguration
  */
-@Transactional
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 	private final RefreshTokenRepository repository;
 	private final BlockedRefreshTokensService blockedTokensService;
@@ -61,14 +58,12 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void invalidate(IUser user, RefreshToken refreshToken) {
 		blockedTokensService.invalidate(refreshToken.id());
 		repository.delete(user, refreshToken);
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void invalidateAll(IUser user) {
 		repository.findAllByUser(user)
 			.forEach(rt -> blockedTokensService.invalidate(rt.id()));
