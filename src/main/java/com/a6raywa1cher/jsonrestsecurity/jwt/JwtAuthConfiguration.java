@@ -38,11 +38,11 @@ public class JwtAuthConfiguration {
 	@ConditionalOnMissingBean(BlockedRefreshTokensService.class)
 	public BlockedRefreshTokensService blockedRefreshTokensService() {
 		return new BlockedRefreshTokensServiceImpl(properties.getRefreshDuration());
-    }
+	}
 
 	@Bean
 	@ConditionalOnMissingBean(JwtTokenService.class)
-    public JwtTokenService jwtTokenService() {
+	public JwtTokenService jwtTokenService() {
 		String secret = properties.getSecret();
 		if (Objects.equals(secret, "generate")) {
 			log.warn("\n\n\nUsing auto-generated JWT secret will cause every token to become invalid after an application restart!\nSet web-security.jwt.secret property (for example, visit this website: https://www.grc.com/passwords.htm )\n\n\n");
@@ -59,21 +59,21 @@ public class JwtAuthConfiguration {
 	@DependsOn("refreshTokenRepository")
 	@ConditionalOnMissingBean(RefreshTokenService.class)
 	public RefreshTokenService refreshTokenService(
-            RefreshTokenRepository repository, BlockedRefreshTokensService service
-    ) {
-        return new RefreshTokenServiceImpl(
-                repository,
-                service,
-                (long) properties.getMaxRefreshTokensPerUser(),
-                properties.getRefreshDuration()
-        );
-    }
+		RefreshTokenRepository repository, BlockedRefreshTokensService service
+	) {
+		return new RefreshTokenServiceImpl(
+			repository,
+			service,
+			(long) properties.getMaxRefreshTokensPerUser(),
+			properties.getRefreshDuration()
+		);
+	}
 
 	@Bean
 	@ConditionalOnMissingBean(JwtRefreshPairService.class)
-    public JwtRefreshPairService jwtRefreshPairService(
-            JwtTokenService jwtTokenService, RefreshTokenService refreshTokenService
-    ) {
-        return new JwtRefreshPairServiceImpl(refreshTokenService, jwtTokenService);
-    }
+	public JwtRefreshPairService jwtRefreshPairService(
+		JwtTokenService jwtTokenService, RefreshTokenService refreshTokenService
+	) {
+		return new JwtRefreshPairServiceImpl(refreshTokenService, jwtTokenService);
+	}
 }

@@ -4,17 +4,17 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IUser {
-    Long getId();
+	Long getId();
 
-    Object getUserRole();
+	Object getUserRole();
 
-    LocalDateTime getLastVisitAt();
+	LocalDateTime getLastVisitAt();
 
-    void setLastVisitAt(LocalDateTime lastVisit);
+	void setLastVisitAt(LocalDateTime lastVisit);
 
-    String getPassword();
+	String getPassword();
 
-    List<RefreshToken> getRefreshTokens();
+	List<RefreshToken> getRefreshTokens();
 
-    void setRefreshTokens(List<RefreshToken> refreshTokens);
+	void setRefreshTokens(List<RefreshToken> refreshTokens);
 }

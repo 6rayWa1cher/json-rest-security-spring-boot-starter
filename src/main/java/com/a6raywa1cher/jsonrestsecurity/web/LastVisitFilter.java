@@ -15,31 +15,31 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 public class LastVisitFilter extends OncePerRequestFilter {
-    private final UserService userService;
-    private final AuthenticationResolver resolver;
+	private final UserService userService;
+	private final AuthenticationResolver resolver;
 
-    public LastVisitFilter(UserService userService, AuthenticationResolver resolver) {
-        this.userService = userService;
-        this.resolver = resolver;
-    }
+	public LastVisitFilter(UserService userService, AuthenticationResolver resolver) {
+		this.userService = userService;
+		this.resolver = resolver;
+	}
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        try {
-            filterChain.doFilter(request, response);
-        } finally {
-            try {
-                if (SecurityContextHolder.getContext().getAuthentication() != null) {
-                    IUser user = resolver.getUser();
-                    if (user.getLastVisitAt().plusSeconds(30).isBefore(LocalDateTime.now())) {
-                        userService.updateLastVisitAt(user);
-                    }
-                }
-            } catch (AuthenticationResolveException ignored) {
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+		try {
+			filterChain.doFilter(request, response);
+		} finally {
+			try {
+				if (SecurityContextHolder.getContext().getAuthentication() != null) {
+					IUser user = resolver.getUser();
+					if (user.getLastVisitAt().plusSeconds(30).isBefore(LocalDateTime.now())) {
+						userService.updateLastVisitAt(user);
+					}
+				}
+			} catch (AuthenticationResolveException ignored) {
 
-            } catch (Exception e) {
-                logger.error("Error while setting last visit", e);
-            }
-        }
-    }
+			} catch (Exception e) {
+				logger.error("Error while setting last visit", e);
+			}
+		}
+	}
 }

@@ -3,10 +3,10 @@ package com.a6raywa1cher.jsonrestsecurity.web;
 import com.a6raywa1cher.jsonrestsecurity.component.SecurityComponentsConfiguration;
 import com.a6raywa1cher.jsonrestsecurity.component.authority.GrantedAuthorityService;
 import com.a6raywa1cher.jsonrestsecurity.component.resolver.AuthenticationResolver;
-import com.a6raywa1cher.jsonrestsecurity.criticalaction.CriticalActionLimiterConfiguration;
-import com.a6raywa1cher.jsonrestsecurity.criticalaction.CriticalActionLimiterFilter;
 import com.a6raywa1cher.jsonrestsecurity.dao.DaoConfiguration;
 import com.a6raywa1cher.jsonrestsecurity.dao.service.UserService;
+import com.a6raywa1cher.jsonrestsecurity.faillimiter.FailLimiterConfiguration;
+import com.a6raywa1cher.jsonrestsecurity.faillimiter.FailLimiterFilter;
 import com.a6raywa1cher.jsonrestsecurity.jwt.JwtAuthConfiguration;
 import com.a6raywa1cher.jsonrestsecurity.jwt.JwtAuthenticationFilter;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.BlockedRefreshTokensService;
@@ -43,7 +43,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 	JwtAuthConfiguration.class,
 	SecurityComponentsConfiguration.class,
 	JsonRestSecurityPropertiesConfiguration.class,
-	CriticalActionLimiterConfiguration.class
+	FailLimiterConfiguration.class
 })
 public class JsonRestWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 	private UserService userService;
@@ -62,7 +62,7 @@ public class JsonRestWebSecurityConfigurer extends WebSecurityConfigurerAdapter 
 
 	private CorsConfigurationSource corsConfigurationSource;
 
-	private CriticalActionLimiterFilter criticalActionLimiterFilter;
+	private FailLimiterFilter failLimiterFilter;
 
 	private boolean useAnyMatcher = true;
 
@@ -87,7 +87,7 @@ public class JsonRestWebSecurityConfigurer extends WebSecurityConfigurerAdapter 
 		http.formLogin();
 		http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenService, authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class);
 		http.addFilterAfter(new LastVisitFilter(userService, authenticationResolver), SecurityContextHolderAwareRequestFilter.class);
-		http.addFilterBefore(criticalActionLimiterFilter, JwtAuthenticationFilter.class);
+		http.addFilterBefore(failLimiterFilter, JwtAuthenticationFilter.class);
 	}
 
 	protected void configureAuthorizeRequests(HttpSecurity http) throws Exception {
@@ -159,7 +159,7 @@ public class JsonRestWebSecurityConfigurer extends WebSecurityConfigurerAdapter 
 	}
 
 	@Autowired(required = false)
-	public void setCriticalActionLimiterFilter(CriticalActionLimiterFilter criticalActionLimiterFilter) {
-		this.criticalActionLimiterFilter = criticalActionLimiterFilter;
+	public void setCriticalActionLimiterFilter(FailLimiterFilter failLimiterFilter) {
+		this.failLimiterFilter = failLimiterFilter;
 	}
 }

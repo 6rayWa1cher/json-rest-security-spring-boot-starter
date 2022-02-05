@@ -11,25 +11,25 @@ import com.a6raywa1cher.jsonrestsecurity.jwt.service.RefreshTokenService;
 import java.time.OffsetDateTime;
 
 public class JwtRefreshPairServiceImpl implements JwtRefreshPairService {
-    private final RefreshTokenService refreshTokenService;
+	private final RefreshTokenService refreshTokenService;
 
-    private final JwtTokenService jwtTokenService;
+	private final JwtTokenService jwtTokenService;
 
-    public JwtRefreshPairServiceImpl(RefreshTokenService refreshTokenService, JwtTokenService jwtTokenService) {
-        this.refreshTokenService = refreshTokenService;
-        this.jwtTokenService = jwtTokenService;
-    }
+	public JwtRefreshPairServiceImpl(RefreshTokenService refreshTokenService, JwtTokenService jwtTokenService) {
+		this.refreshTokenService = refreshTokenService;
+		this.jwtTokenService = jwtTokenService;
+	}
 
-    @Override
-    public JwtRefreshPair issue(IUser user) {
-        RefreshToken refreshToken = refreshTokenService.issue(user);
-        JwtToken accessToken = jwtTokenService.issue(user.getId(), refreshToken.id());
-        return new JwtRefreshPair(
+	@Override
+	public JwtRefreshPair issue(IUser user) {
+		RefreshToken refreshToken = refreshTokenService.issue(user);
+		JwtToken accessToken = jwtTokenService.issue(user.getId(), refreshToken.id());
+		return new JwtRefreshPair(
 			refreshToken.token(),
 			OffsetDateTime.of(refreshToken.expiringAt(), OffsetDateTime.now().getOffset()),
 			accessToken.getToken(),
 			OffsetDateTime.of(accessToken.getExpiringAt(), OffsetDateTime.now().getOffset()),
 			user.getId()
 		);
-    }
+	}
 }

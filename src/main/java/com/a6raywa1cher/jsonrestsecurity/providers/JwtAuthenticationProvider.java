@@ -43,14 +43,14 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 		if (!service.isValid(jwtToken.getRefreshId())) {
 			throw new CredentialsExpiredException("Refresh-token was revoked");
 		}
-        Long userId = jwtToken.getUid();
-        Optional<IUser> byId = userService.getById(userId);
+		Long userId = jwtToken.getUid();
+		Optional<IUser> byId = userService.getById(userId);
 		if (byId.isEmpty()) {
 			customAuthentication.setAuthenticated(false);
 			throw new UsernameNotFoundException(String.format("User %d doesn't exists", userId));
 		}
-        IUser user = byId.get();
-        Collection<GrantedAuthority> authorities = grantedAuthorityService.getAuthorities(user);
+		IUser user = byId.get();
+		Collection<GrantedAuthority> authorities = grantedAuthorityService.getAuthorities(user);
 		return new JwtAuthentication(authorities, jwtToken);
 	}
 

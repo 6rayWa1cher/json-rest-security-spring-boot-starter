@@ -30,16 +30,16 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		if (!(authentication instanceof UsernamePasswordAuthenticationToken token) ||
-				!(authentication.getPrincipal() instanceof String) ||
-				!(authentication.getCredentials() instanceof String inputPassword)) {
+			!(authentication.getPrincipal() instanceof String) ||
+			!(authentication.getCredentials() instanceof String inputPassword)) {
 			return null;
 		}
-        String principal = (String) token.getPrincipal();
-        Optional<IUser> byUsername = userService.getByLogin(principal);
+		String principal = (String) token.getPrincipal();
+		Optional<IUser> byUsername = userService.getByLogin(principal);
 		if (byUsername.isEmpty()) {
 			throw new BadCredentialsException("User not exists or incorrect password");
 		}
-        IUser user = byUsername.get();
+		IUser user = byUsername.get();
 		if (user.getPassword() == null || "".equals(user.getPassword())) {
 			throw new DisabledException("User didn't set up password");
 		}
@@ -48,7 +48,7 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
 		}
 		Collection<GrantedAuthority> authorities = grantedAuthorityService.getAuthorities(user);
 		return new UsernamePasswordAuthenticationToken(
-				user.getId(), token, authorities);
+			user.getId(), token, authorities);
 	}
 
 	@Override

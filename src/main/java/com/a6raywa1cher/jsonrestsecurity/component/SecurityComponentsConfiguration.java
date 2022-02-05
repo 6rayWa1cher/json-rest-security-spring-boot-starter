@@ -34,7 +34,7 @@ public class SecurityComponentsConfiguration {
 	 *
 	 * @param properties holder of allowed origins
 	 * @return CORS settings bean
-	 * @see JsonRestSecurityConfigProperties#corsAllowedOrigins
+	 * @see JsonRestSecurityConfigProperties#getCorsAllowedOrigins()
 	 */
 	@Bean
 	@ConditionalOnMissingBean(CorsConfigurationSource.class)

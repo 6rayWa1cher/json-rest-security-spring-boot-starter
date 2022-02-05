@@ -32,39 +32,39 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 		this.refreshTokenDuration = refreshTokenDuration;
 	}
 
-    @Override
-    public RefreshToken issue(IUser user) {
-        List<RefreshToken> tokenList = repository.findAllByUser(user);
-        if (tokenList.size() > maxTokensPerUser) {
-            repository.deleteAllFromUser(user, tokenList.stream()
-                    .sorted(Comparator.comparing(RefreshToken::expiringAt))
-                    .limit(tokenList.size() - 5)
-                    .peek(rt -> service.invalidate(rt.id()))
-                    .toList());
-        }
-        RefreshToken refreshToken = new RefreshToken(
-                UUID.randomUUID().toString(),
-                UUID.randomUUID().toString(),
-                LocalDateTime.now().plus(refreshTokenDuration)
-        );
-        return repository.save(user, refreshToken);
-    }
+	@Override
+	public RefreshToken issue(IUser user) {
+		List<RefreshToken> tokenList = repository.findAllByUser(user);
+		if (tokenList.size() > maxTokensPerUser) {
+			repository.deleteAllFromUser(user, tokenList.stream()
+				.sorted(Comparator.comparing(RefreshToken::expiringAt))
+				.limit(tokenList.size() - 5)
+				.peek(rt -> service.invalidate(rt.id()))
+				.toList());
+		}
+		RefreshToken refreshToken = new RefreshToken(
+			UUID.randomUUID().toString(),
+			UUID.randomUUID().toString(),
+			LocalDateTime.now().plus(refreshTokenDuration)
+		);
+		return repository.save(user, refreshToken);
+	}
 
-    @Override
-    public Optional<RefreshToken> getByToken(IUser user, String token) {
-        return repository.findByToken(user, token);
-    }
+	@Override
+	public Optional<RefreshToken> getByToken(IUser user, String token) {
+		return repository.findByToken(user, token);
+	}
 
-    @Override
-    public void invalidate(IUser user, RefreshToken refreshToken) {
-        service.invalidate(refreshToken.id());
-        repository.delete(user, refreshToken);
-    }
+	@Override
+	public void invalidate(IUser user, RefreshToken refreshToken) {
+		service.invalidate(refreshToken.id());
+		repository.delete(user, refreshToken);
+	}
 
-    @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void invalidateAll(IUser user) {
-        repository.findAllByUser(user)
-                .forEach(rt -> service.invalidate(rt.id()));
-    }
+	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public void invalidateAll(IUser user) {
+		repository.findAllByUser(user)
+			.forEach(rt -> service.invalidate(rt.id()));
+	}
 }

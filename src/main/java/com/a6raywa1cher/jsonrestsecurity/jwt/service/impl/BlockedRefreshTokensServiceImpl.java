@@ -8,26 +8,26 @@ import com.google.common.cache.LoadingCache;
 import java.time.Duration;
 
 public class BlockedRefreshTokensServiceImpl implements BlockedRefreshTokensService {
-    private final LoadingCache<String, String> cache;
+	private final LoadingCache<String, String> cache;
 
-    public BlockedRefreshTokensServiceImpl(Duration duration) {
-        cache = CacheBuilder.newBuilder()
-                .expireAfterWrite(duration)
-                .build(new CacheLoader<>() {
-                    @Override
-                    public String load(String key) {
-                        return key;
-                    }
-                });
-    }
+	public BlockedRefreshTokensServiceImpl(Duration duration) {
+		cache = CacheBuilder.newBuilder()
+			.expireAfterWrite(duration)
+			.build(new CacheLoader<>() {
+				@Override
+				public String load(String key) {
+					return key;
+				}
+			});
+	}
 
-    @Override
-    public void invalidate(String id) {
-        cache.put(id, id);
-    }
+	@Override
+	public void invalidate(String id) {
+		cache.put(id, id);
+	}
 
-    @Override
-    public boolean isValid(String id) {
-        return cache.getIfPresent(id) == null;
-    }
+	@Override
+	public boolean isValid(String id) {
+		return cache.getIfPresent(id) == null;
+	}
 }

@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RefreshTokenRepository {
-    List<RefreshToken> findAllByUser(IUser user);
+	List<RefreshToken> findAllByUser(IUser user);
 
-    void deleteAllFromUser(IUser user, List<RefreshToken> listToDelete);
+	void deleteAllFromUser(IUser user, List<RefreshToken> listToDelete);
 
-    RefreshToken save(IUser user, RefreshToken refreshToken);
+	RefreshToken save(IUser user, RefreshToken refreshToken);
 
-    Optional<RefreshToken> findByToken(IUser user, String token);
+	Optional<RefreshToken> findByToken(IUser user, String token);
 
-    void delete(IUser user, RefreshToken refreshToken);
+	void delete(IUser user, RefreshToken refreshToken);
 }

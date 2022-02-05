@@ -7,11 +7,11 @@ import com.a6raywa1cher.jsonrestsecurity.dao.model.RefreshToken;
 import java.util.Optional;
 
 public interface RefreshTokenService {
-    RefreshToken issue(IUser user);
+	RefreshToken issue(IUser user);
 
-    Optional<RefreshToken> getByToken(IUser user, String token);
+	Optional<RefreshToken> getByToken(IUser user, String token);
 
-    void invalidate(IUser user, RefreshToken refreshToken);
+	void invalidate(IUser user, RefreshToken refreshToken);
 
-    void invalidateAll(IUser user);
+	void invalidateAll(IUser user);
 }

@@ -28,8 +28,9 @@ public class AuthenticationResolverImpl implements AuthenticationResolver {
 
 	/**
 	 * Returns the current user info from {@link SecurityContextHolder}
+	 *
 	 * @return current user
-	 * @throws AuthenticationException if user isn't logged in
+	 * @throws AuthenticationException        if user isn't logged in
 	 * @throws AuthenticationResolveException unknown {@link Authentication}
 	 * @see SecurityContextHolder
 	 */

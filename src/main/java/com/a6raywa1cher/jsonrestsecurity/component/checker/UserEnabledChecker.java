@@ -12,5 +12,5 @@ import com.a6raywa1cher.jsonrestsecurity.dao.model.IUser;
  * @see DefaultUserEnabledChecker
  */
 public interface UserEnabledChecker {
-    boolean check(IUser user);
+	boolean check(IUser user);
 }
