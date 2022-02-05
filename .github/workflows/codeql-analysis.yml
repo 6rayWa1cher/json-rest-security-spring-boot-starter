@@ -38,7 +38,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-      uses: actions/checkout@v2
+        uses: actions/checkout@v2
 
       # Initializes the CodeQL tools for scanning.
       - name: Initialize CodeQL
@@ -65,12 +65,12 @@ jobs:
       # 📚 https://git.io/JvXDl
 
       # ✏️ If the Autobuild fails above, remove it and uncomment the following three lines
-    #    and modify them (or add more) to build your code if your project
-    #    uses a compiled language
+      #    and modify them (or add more) to build your code if your project
+      #    uses a compiled language
 
-    #- run: |
-    #   make bootstrap
-    #   make release
+      #- run: |
+      #   make bootstrap
+      #   make release
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
