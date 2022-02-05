@@ -23,25 +23,23 @@ import java.util.Optional;
  * Example of the issued JWT (decoded):
  * <br/>
  * Header:
- * <code>
  * <pre>
- * {
+ * <code>{
  *   "typ": "JWT",
  *   "alg": "HS512"
  * }
- * </pre>
  * </code>
+ * </pre>
  * Payload:
- * <code>
  * <pre>
- * {
+ * <code>{
  *   "sub": "1",
  *   "rti": "38f726e6-756c-4bd7-8352-78e8cd6017d0",
  *   "iss": "test-app",
  *   "exp": 1644070560
  * }
- * </pre>
  * </code>
+ * </pre>
  * In payload {@code rti} is the refresh token id.
  *
  * @see com.a6raywa1cher.jsonrestsecurity.jwt.JwtAuthConfiguration
