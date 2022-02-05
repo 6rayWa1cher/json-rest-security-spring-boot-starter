@@ -46,7 +46,7 @@ public abstract class AbstractFullApplicationTests<T extends AbstractUser> {
 	void beansArePresent() {
 		assertThat(ctx.containsBean("authController")).isTrue();
 		assertThat(ctx.getBeanNamesForType(JsonRestWebSecurityConfigurer.class)).hasSize(1);
-		assertThat(ctx.containsBean("criticalActionLimiterFilter")).isTrue();
+		assertThat(ctx.containsBean("failLimiterFilter")).isTrue();
 	}
 
 	protected abstract void createNewUser(String username, String password);
