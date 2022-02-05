@@ -10,11 +10,26 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collection;
 import java.util.Optional;
 
+/**
+ * Authenticates the client with {@link UsernamePasswordAuthenticationToken}.
+ * <br/>
+ * Steps of the provider:
+ * <ol>
+ *     <li>Load the user. If it's not found - throw {@link UsernameNotFoundException}</li>
+ *     <li>Check if user has provided a password. If isn't - throw {@link DisabledException}</li>
+ *     <li>Check the password. If password isn't matches - throw {@link BadCredentialsException}</li>
+ *     <li>Gather granted authorities from {@link #grantedAuthorityService} for the user</li>
+ *     <li>Return authenticated {@link UsernamePasswordAuthenticationToken}</li>
+ * </ol>
+ *
+ * @see com.a6raywa1cher.jsonrestsecurity.web.JsonRestWebSecurityConfigurer
+ */
 public class UsernamePasswordAuthenticationProvider implements AuthenticationProvider {
 	private final PasswordEncoder passwordEncoder;
 	private final UserService userService;
@@ -37,7 +52,7 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
 		String principal = (String) token.getPrincipal();
 		Optional<IUser> byUsername = userService.getByLogin(principal);
 		if (byUsername.isEmpty()) {
-			throw new BadCredentialsException("User not exists or incorrect password");
+			throw new UsernameNotFoundException("User not exists or incorrect password");
 		}
 		IUser user = byUsername.get();
 		if (user.getPassword() == null || "".equals(user.getPassword())) {

@@ -17,15 +17,29 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.util.Collection;
 import java.util.Optional;
 
+/**
+ * Authenticates the client with {@link JwtAuthentication}.
+ * <br/>
+ * Steps of the provider:
+ * <ol>
+ *     <li>Extract the {@link JwtToken} from authentication. If it's null - throw {@link BadCredentialsException}</li>
+ *     <li>Check if the associated refresh token was recently revoked in {@link #blockedTokensService}. If it's revoked - throw {@link CredentialsExpiredException}</li>
+ *     <li>Load the user. If it's not found - throw {@link UsernameNotFoundException}</li>
+ *     <li>Gather granted authorities from {@link #grantedAuthorityService} for the user</li>
+ *     <li>Return authenticated {@link JwtAuthentication}</li>
+ * </ol>
+ *
+ * @see com.a6raywa1cher.jsonrestsecurity.web.JsonRestWebSecurityConfigurer
+ */
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 	private final UserService userService;
-	private final BlockedRefreshTokensService service;
+	private final BlockedRefreshTokensService blockedTokensService;
 	private final GrantedAuthorityService grantedAuthorityService;
 
-	public JwtAuthenticationProvider(UserService userService, BlockedRefreshTokensService service,
+	public JwtAuthenticationProvider(UserService userService, BlockedRefreshTokensService blockedTokensService,
 									 GrantedAuthorityService grantedAuthorityService) {
 		this.userService = userService;
-		this.service = service;
+		this.blockedTokensService = blockedTokensService;
 		this.grantedAuthorityService = grantedAuthorityService;
 	}
 
@@ -40,7 +54,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 			customAuthentication.setAuthenticated(false);
 			throw new BadCredentialsException("JwtToken not provided");
 		}
-		if (!service.isValid(jwtToken.getRefreshId())) {
+		if (!blockedTokensService.isValid(jwtToken.getRefreshId())) {
 			throw new CredentialsExpiredException("Refresh-token was revoked");
 		}
 		Long userId = jwtToken.getUid();
