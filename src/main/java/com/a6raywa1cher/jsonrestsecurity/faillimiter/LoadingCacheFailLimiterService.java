@@ -24,7 +24,7 @@ import static com.a6raywa1cher.jsonrestsecurity.utils.LogUtils.log;
  * requests while blocked, block time will reset.
  * <br/>
  *
- * @see LoadingCache
+ * @see com.google.common.cache.LoadingCache
  * @see FailLimiterConfiguration
  */
 public class LoadingCacheFailLimiterService implements FailLimiterService {

@@ -13,6 +13,18 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Abstract implementation on {@link IUser}.
+ * <br/>
+ * Created to make creating custom implementations of IUser easier.
+ * In most cases, the user just needs to extend this class and add custom fields.
+ * <br/>
+ *
+ * @implNote Works best with PostgreSQL. In other databases, the user might have to
+ * add a new domain {@code jsonb} and map it to either the json-compatible type or the string-compatible type
+ * @see DefaultUser
+ * @see JsonType
+ */
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @TypeDefs({

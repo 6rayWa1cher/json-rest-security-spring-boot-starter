@@ -1,6 +1,11 @@
 package com.a6raywa1cher.jsonrestsecurity.dao.model;
 
-public class DefaultUser extends AbstractUser implements Cloneable {
+/**
+ * The default implementation of {@link IUser} and {@link AbstractUser}.
+ * <br/>
+ * It's not intended to use this class on the production.
+ */
+public final class DefaultUser extends AbstractUser implements Cloneable {
 	@Override
 	public DefaultUser clone() throws CloneNotSupportedException {
 		DefaultUser defaultUser = (DefaultUser) super.clone();

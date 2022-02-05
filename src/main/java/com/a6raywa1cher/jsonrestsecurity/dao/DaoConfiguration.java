@@ -7,9 +7,7 @@ import com.a6raywa1cher.jsonrestsecurity.dao.repo.RefreshTokenRepository;
 import com.a6raywa1cher.jsonrestsecurity.dao.service.DefaultUserService;
 import com.a6raywa1cher.jsonrestsecurity.dao.service.UserService;
 import com.a6raywa1cher.jsonrestsecurity.web.PasswordEncoderConfiguration;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,8 +16,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static com.a6raywa1cher.jsonrestsecurity.utils.LogUtils.log;
 
+/**
+ * Configures all beans from {@link com.a6raywa1cher.jsonrestsecurity.dao} package.
+ */
 @Configuration
-@AutoConfigureAfter(JpaRepositoriesAutoConfiguration.class)
 @Import(PasswordEncoderConfiguration.class)
 public class DaoConfiguration {
 	private final ApplicationContext applicationContext;

@@ -8,6 +8,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * The default implementation of {@link IUserRepository}.
+ * <br/>
+ * Stores users in HashMap {@link #db}. Works only with {@link DefaultUser}.
+ *
+ * @see com.a6raywa1cher.jsonrestsecurity.dao.DaoConfiguration
+ */
 public class DefaultUserRepository implements IUserRepository<DefaultUser> {
 	private final Map<Long, DefaultUser> db = new HashMap<>();
 	private final AtomicLong lastId = new AtomicLong(0);

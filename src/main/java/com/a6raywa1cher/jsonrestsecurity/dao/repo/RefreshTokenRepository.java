@@ -6,6 +6,11 @@ import com.a6raywa1cher.jsonrestsecurity.dao.model.RefreshToken;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Provides methods to operate {@link RefreshToken} objects
+ *
+ * @see DefaultRefreshTokenRepository
+ */
 public interface RefreshTokenRepository {
 	List<RefreshToken> findAllByUser(IUser user);
 

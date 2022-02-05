@@ -7,6 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The default implementation of {@link RefreshTokenRepository}.
+ * <br/>
+ * Stores {@link RefreshToken} in IUser.
+ *
+ * @see com.a6raywa1cher.jsonrestsecurity.dao.DaoConfiguration
+ */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class DefaultRefreshTokenRepository implements RefreshTokenRepository {
 	private final IUserRepository userRepository;
