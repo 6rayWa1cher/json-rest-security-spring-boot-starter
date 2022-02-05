@@ -5,8 +5,7 @@ Basic security enclosure for JSON REST backends on Spring Boot WebMvc
 
 ## About
 
-Json-rest-security-spring-boot-starter is a starter for Spring Boot that set up basic security enclosure:
-
+Json-rest-security-spring-boot-starter is a starter for Spring Boot that sets up a simple security enclosure. Including:
 - CORS settings
 - Basic and Access-Refresh (JWT+UUID) authentications
 - Basic AuthController for authentications
