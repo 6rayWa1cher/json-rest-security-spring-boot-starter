@@ -16,6 +16,7 @@
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
           <factory-entry name="entityManagerFactory" />
+          <factory-entry name="json-rest-security-spring-boot-starter" />
           <factory-entry name="web-security-spring-boot-starter" />
         </datasource-mapping>
         <naming-strategy-map />

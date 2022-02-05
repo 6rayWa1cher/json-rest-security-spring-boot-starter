@@ -1,6 +1,7 @@
 package com.a6raywa1cher.jsonrestsecurity.component.resolver;
 
 import com.a6raywa1cher.jsonrestsecurity.authentication.JwtAuthentication;
+import com.a6raywa1cher.jsonrestsecurity.component.SecurityComponentsConfiguration;
 import com.a6raywa1cher.jsonrestsecurity.dao.model.IUser;
 import com.a6raywa1cher.jsonrestsecurity.dao.service.UserService;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -9,6 +10,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+/**
+ * The default implementation of {@link AuthenticationResolver}.
+ * <br/>
+ * Resolves user from {@link JwtAuthentication} and {@link UsernamePasswordAuthenticationToken}.
+ * <br/>
+ *
+ * @see AuthenticationResolver
+ * @see SecurityComponentsConfiguration
+ */
 public class AuthenticationResolverImpl implements AuthenticationResolver {
 	private final UserService userService;
 
@@ -16,6 +26,13 @@ public class AuthenticationResolverImpl implements AuthenticationResolver {
 		this.userService = userService;
 	}
 
+	/**
+	 * Returns the current user info from {@link SecurityContextHolder}
+	 * @return current user
+	 * @throws AuthenticationException if user isn't logged in
+	 * @throws AuthenticationResolveException unknown {@link Authentication}
+	 * @see SecurityContextHolder
+	 */
 	@Override
 	public IUser getUser() throws AuthenticationException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

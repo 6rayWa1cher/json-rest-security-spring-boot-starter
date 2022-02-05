@@ -23,9 +23,19 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.Collections;
 
+/**
+ * Configures all beans from {@link com.a6raywa1cher.jsonrestsecurity.component} package.
+ */
 @Configuration
 @Import(JsonRestSecurityPropertiesConfiguration.class)
 public class SecurityComponentsConfiguration {
+	/**
+	 * Returns default CORS settings bean based on {@code json-rest-security.cors-allowed-origins} properties
+	 *
+	 * @param properties holder of allowed origins
+	 * @return CORS settings bean
+	 * @see JsonRestSecurityConfigProperties#corsAllowedOrigins
+	 */
 	@Bean
 	@ConditionalOnMissingBean(CorsConfigurationSource.class)
 	public CorsConfigurationSource corsConfigurationSource(JsonRestSecurityConfigProperties properties) {

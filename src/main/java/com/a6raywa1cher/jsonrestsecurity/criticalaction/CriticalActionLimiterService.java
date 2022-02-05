@@ -17,7 +17,8 @@ public class CriticalActionLimiterService {
     public CriticalActionLimiterService(int maxAttempts, Duration blockDuration) {
         this.maxAttempts = maxAttempts;
         attemptsCache = CacheBuilder.newBuilder()
-                .expireAfterWrite(blockDuration)
+			.expireAfterWrite(blockDuration)
+			.softValues()
                 .build(new CacheLoader<>() {
                     @Override
                     public Integer load(String key) {
@@ -26,18 +27,14 @@ public class CriticalActionLimiterService {
                 });
     }
 
-    public void actionSucceed(String key) {
-        attemptsCache.invalidate(key);
-    }
-
     public void actionFailed(String key) {
-        int attempts = attemptsCache.getUnchecked(key);
-        attempts++;
-        if (attempts == maxAttempts) {
-            log.warn("Blocked bad-behaved user " + key);
-        }
-        attemptsCache.put(key, attempts);
-    }
+		int attempts = attemptsCache.getUnchecked(key);
+		if (attempts < maxAttempts) {
+			attemptsCache.asMap().compute(key, (k, v) -> v == null ? 1 : v + 1);
+		} else if (attempts == maxAttempts) {
+			log.warn("Blocked bad-behaved user " + key);
+		}
+	}
 
     public boolean isBlocked(String key) {
         return attemptsCache.getUnchecked(key) >= maxAttempts;

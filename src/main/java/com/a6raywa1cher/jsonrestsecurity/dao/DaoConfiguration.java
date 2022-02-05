@@ -29,7 +29,7 @@ public class DaoConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnMissingBean(type = "IUserRepository")
+	@ConditionalOnMissingBean(IUserRepository.class)
 	public IUserRepository defaultUserRepository() {
 		if (applicationContext.getBeansOfType(IUserRepository.class).isEmpty()) {
 			log.warn("\n\n\nUsing default UserRepository implementation will cause wipe of users after an application restart!\nCreate your own implementation of IUserRepository or create subinterface\n\n\n");
@@ -40,13 +40,13 @@ public class DaoConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnMissingBean(type = "RefreshTokenRepository")
+	@ConditionalOnMissingBean(RefreshTokenRepository.class)
 	public RefreshTokenRepository refreshTokenRepository(IUserRepository userRepository) {
 		return new DefaultRefreshTokenRepository(userRepository);
 	}
 
 	@Bean
-	@ConditionalOnMissingBean(type = "UserService")
+	@ConditionalOnMissingBean(UserService.class)
 	public UserService userService(IUserRepository userRepository, PasswordEncoder passwordEncoder) {
 		return new DefaultUserService(userRepository, passwordEncoder);
 	}

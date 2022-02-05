@@ -35,13 +35,13 @@ public class JwtAuthConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnMissingBean(type = "BlockedRefreshTokensService")
+	@ConditionalOnMissingBean(BlockedRefreshTokensService.class)
 	public BlockedRefreshTokensService blockedRefreshTokensService() {
 		return new BlockedRefreshTokensServiceImpl(properties.getRefreshDuration());
     }
 
 	@Bean
-	@ConditionalOnMissingBean(type = "JwtTokenService")
+	@ConditionalOnMissingBean(JwtTokenService.class)
     public JwtTokenService jwtTokenService() {
 		String secret = properties.getSecret();
 		if (Objects.equals(secret, "generate")) {
@@ -57,7 +57,7 @@ public class JwtAuthConfiguration {
 
 	@Bean
 	@DependsOn("refreshTokenRepository")
-	@ConditionalOnMissingBean(type = "RefreshTokenService")
+	@ConditionalOnMissingBean(RefreshTokenService.class)
 	public RefreshTokenService refreshTokenService(
             RefreshTokenRepository repository, BlockedRefreshTokensService service
     ) {
@@ -70,7 +70,7 @@ public class JwtAuthConfiguration {
     }
 
 	@Bean
-	@ConditionalOnMissingBean(type = "JwtRefreshPairService")
+	@ConditionalOnMissingBean(JwtRefreshPairService.class)
     public JwtRefreshPairService jwtRefreshPairService(
             JwtTokenService jwtTokenService, RefreshTokenService refreshTokenService
     ) {
