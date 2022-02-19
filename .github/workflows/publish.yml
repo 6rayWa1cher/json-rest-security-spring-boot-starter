@@ -1,4 +1,4 @@
-name: tests
+name: publish
 
 on:
   push:
@@ -13,12 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Configure GPG Key
-        run: |
-          echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
-        env:
-          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
-
       - uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
@@ -27,9 +21,11 @@ jobs:
           server-id: ossrh
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
-
-      - name: Compile, verify and publish to Nexus
-        run: mvn --batch-mode deploy
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Compile, verify and publish to Nexus
+        run: mvn --batch-mode deploy
