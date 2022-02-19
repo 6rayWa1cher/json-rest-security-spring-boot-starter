@@ -30,10 +30,10 @@ public class DefaultRefreshTokenRepository implements RefreshTokenRepository {
 	@Override
 	public void deleteAllFromUser(IUser user, List<RefreshToken> listToDelete) {
 		List<String> idsToDelete = listToDelete.stream()
-			.map(RefreshToken::id)
+			.map(RefreshToken::getId)
 			.toList();
 		List<RefreshToken> refreshTokens = new ArrayList<>(user.getRefreshTokens());
-		refreshTokens.removeIf(rt -> idsToDelete.contains(rt.id()));
+		refreshTokens.removeIf(rt -> idsToDelete.contains(rt.getId()));
 		user.setRefreshTokens(refreshTokens);
 		userRepository.save(user);
 	}
@@ -41,7 +41,7 @@ public class DefaultRefreshTokenRepository implements RefreshTokenRepository {
 	@Override
 	public RefreshToken save(IUser user, RefreshToken refreshToken) {
 		List<RefreshToken> refreshTokens = new ArrayList<>(user.getRefreshTokens());
-		refreshTokens.removeIf(rt -> rt.id().equals(refreshToken.id()));
+		refreshTokens.removeIf(rt -> rt.getId().equals(refreshToken.getId()));
 		refreshTokens.add(refreshToken);
 		user.setRefreshTokens(refreshTokens);
 		userRepository.save(user);
@@ -52,14 +52,14 @@ public class DefaultRefreshTokenRepository implements RefreshTokenRepository {
 	public Optional<RefreshToken> findByToken(IUser user, String token) {
 		List<RefreshToken> refreshTokens = new ArrayList<>(user.getRefreshTokens());
 		return refreshTokens.stream()
-			.filter(rt -> rt.token().equals(token))
+			.filter(rt -> rt.getToken().equals(token))
 			.findFirst();
 	}
 
 	@Override
 	public void delete(IUser user, RefreshToken refreshToken) {
 		List<RefreshToken> refreshTokens = new ArrayList<>(user.getRefreshTokens());
-		refreshTokens.removeIf(rt -> rt.id().equals(refreshToken.id()));
+		refreshTokens.removeIf(rt -> rt.getId().equals(refreshToken.getId()));
 		user.setRefreshTokens(refreshTokens);
 		userRepository.save(user);
 	}

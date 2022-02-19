@@ -28,10 +28,10 @@ public class JwtRefreshPairServiceImpl implements JwtRefreshPairService {
 	@Override
 	public JwtRefreshPair issue(IUser user) {
 		RefreshToken refreshToken = refreshTokenService.issue(user);
-		JwtToken accessToken = jwtTokenService.issue(user.getId(), refreshToken.id());
+		JwtToken accessToken = jwtTokenService.issue(user.getId(), refreshToken.getId());
 		return new JwtRefreshPair(
-			refreshToken.token(),
-			OffsetDateTime.of(refreshToken.expiringAt(), OffsetDateTime.now().getOffset()),
+			refreshToken.getToken(),
+			OffsetDateTime.of(refreshToken.getExpiringAt(), OffsetDateTime.now().getOffset()),
 			accessToken.getToken(),
 			OffsetDateTime.of(accessToken.getExpiringAt(), OffsetDateTime.now().getOffset()),
 			user.getId()

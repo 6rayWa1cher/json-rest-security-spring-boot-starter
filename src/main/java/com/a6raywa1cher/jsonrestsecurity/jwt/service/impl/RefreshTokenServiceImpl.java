@@ -39,9 +39,9 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 		List<RefreshToken> tokenList = repository.findAllByUser(user);
 		if (tokenList.size() > maxTokensPerUser) {
 			repository.deleteAllFromUser(user, tokenList.stream()
-				.sorted(Comparator.comparing(RefreshToken::expiringAt))
+				.sorted(Comparator.comparing(RefreshToken::getExpiringAt))
 				.limit(tokenList.size() - maxTokensPerUser)
-				.peek(rt -> blockedTokensService.invalidate(rt.id()))
+				.peek(rt -> blockedTokensService.invalidate(rt.getId()))
 				.toList());
 		}
 		RefreshToken refreshToken = new RefreshToken(
@@ -59,13 +59,13 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
 	@Override
 	public void invalidate(IUser user, RefreshToken refreshToken) {
-		blockedTokensService.invalidate(refreshToken.id());
+		blockedTokensService.invalidate(refreshToken.getId());
 		repository.delete(user, refreshToken);
 	}
 
 	@Override
 	public void invalidateAll(IUser user) {
 		repository.findAllByUser(user)
-			.forEach(rt -> blockedTokensService.invalidate(rt.id()));
+			.forEach(rt -> blockedTokensService.invalidate(rt.getId()));
 	}
 }
