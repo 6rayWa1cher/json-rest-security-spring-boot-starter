@@ -14,8 +14,6 @@ Json-rest-security-spring-boot-starter is a starter for Spring Boot that sets up
 - User entity facades
 - Fail limiting and last visit filters
 
-Compatible with springdoc-openapi.
-
 ## Installation
 
 Add the dependency to your pom.xml
@@ -35,8 +33,8 @@ Add the dependency to your pom.xml
 
 You can create a user class in two different ways:
 
-1. Extend the `AbstractUser` class. Therefore, all necessary field will be presented without any additional code.
-2. Implement the `IUser` interface. You could create these fields in your user class to comply the interface with
+1. Extend the `AbstractUser` class. This way, all necessary fields will be presented without any additional code.
+2. Implement the `IUser` interface. You could create these fields in your user class to comply with the interface with
    setters and getters:
     ```java
     private Long id;
@@ -59,21 +57,21 @@ public interface UserRepository extends IUserRepository<User>, CrudRepository<Us
 }
 ```
 
-`RefreshToken` isn't an Entity in terms of JPA. By default, they're stored as JSON array field in the user class. You
-can, however, extend class and change it.
+`RefreshToken` isn't an Entity in terms of JPA. By default, refresh tokens are stored as a JSON array field in the user
+class. You can, however, extend the class and change it.
 
-In most cases you find it useful to implement `UserService` or extend `DefaultUserService`.
+Optionally, implement `UserService` or extend `DefaultUserService`.
 
 ### Access-Refresh authorization flow
 
-1. User sends request to `POST /auth/login` with body:
+1. The User sends a request to `POST /auth/login` with body:
     ```json
     {
       "username": "abcdef",
       "password": "qwerty"
     }
     ```
-   If the username/password pair is valid, server will return a pair of tokens:
+   If the username/password pair is valid, the server will return a pair of tokens:
     ```json
     {
       "refreshToken": "8ce451bb-44cb-4fbd-9e9d-02ee3335e176",
@@ -83,46 +81,48 @@ In most cases you find it useful to implement `UserService` or extend `DefaultUs
       "userId": 1
     }
     ```
-2. With each request, append header with the access token:
+2. Provide a header with the access token with every request:
     ```
     Authorization: Bearer eyJ0eXAiO...
     ```
-3. User can check if accessToken is still works with `GET /auth/check`.
-4. If the accessToken is expired, request new one with the refreshToken at `POST /auth/get_access` with body:
+3. The user can check if accessToken is still works with `GET /auth/check`.
+4. If the accessToken is expired, request a new one with the refreshToken at `POST /auth/get_access` with body:
     ```json
     {
       "refreshToken": "8ce451bb-44cb-4fbd-9e9d-02ee3335e176",
       "userId": 1
     }
     ```
-   User will get another pair of tokens.
-4. User can request `DELETE /auth/invalidate` to invalidate refresh token and associated access token with body:
+   The user will get a new pair of tokens.
+4. The user can request `DELETE /auth/invalidate` to invalidate refresh token and associated access token with body:
     ```json
     {
       "refreshToken": "8ce451bb-44cb-4fbd-9e9d-02ee3335e176",
       "userId": 1
     }
     ```
-5. If user want to make a full logout from all devices, `DELETE /auth/invalidate_all`.
+5. If user want to make a full logout from all devices, use `DELETE /auth/invalidate_all`.
 
-### Granted authorities and user enabled services
+AuthController is compatible with springdoc-openapi.
+
+### Granted authorities and users enable check services
 
 Granted authorities of the user are provided by `grantedAuthorityService` bean.  
-Default implementation returns two types of authorities based on `SimpleGrantedAuthority`:
+The default implementation returns two types of authorities based on `SimpleGrantedAuthority`:
 
-- `ROLE_${userRole}`. For example: `ROLE_USER`.
-- `ENABLED`, if user is enabled.
+- `ROLE_${userRole}`. For example, `ROLE_USER`.
+- `ENABLED` if the user is enabled.
 
-The user is enabled if `userEnabledChecker` bean returns true. By default, it's always true.
+The user is enabled if the `userEnabledChecker` bean returns true. By default, it's always true.
 
-You are free to implement your own `grantedAuthorityService` and `userEnabledChecker` beans by overriding
+You are free to implement your `grantedAuthorityService` and `userEnabledChecker` beans by overriding
 `GrantedAuthorityService` and `UserEnabledChecker`.
 
 ### Fail limiter
 
-Fail-limiter is a submodule of json-rest-security. It prevents password bruteforce attacks.  
-The client will be banned for `block-duration` after `max-attempts` fails. Fail attempt count is reset after
-`block-duration` since last failed request.  
+Fail-limiter is a submodule of json-rest-security. It prevents password brute-force attacks.  
+The client will be banned for `block-duration` after `max-attempts` fails. Failure attempt count is reset after
+`block-duration` since the last failed request.  
 The request is failed in terms of fail-limiter if the response code is 401 (Unauthorized) or 403 (Forbidden).  
 Properties for fail-limiter are listed below.
 
@@ -152,4 +152,4 @@ Properties for fail-limiter are listed below.
 
 ## Contribution
 
-Any feature requests, improvements, bug and security reports are welcome!
+Any feature requests, improvements, bug reports, and security reports are welcome!
