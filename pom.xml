@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.a6raywa1cher</groupId>
     <artifactId>json-rest-security-spring-boot-starter</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Security enclosure for JSON REST backends on Spring Boot WebMvc</description>
@@ -106,11 +106,11 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
+                <version>1.6.11</version>
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>ossrh</serverId>
-                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
             </plugin>
