@@ -21,6 +21,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 @RequestMapping("/auth")
+@ResponseBody
 public class AuthController {
 	private final RefreshTokenService refreshTokenService;
 
