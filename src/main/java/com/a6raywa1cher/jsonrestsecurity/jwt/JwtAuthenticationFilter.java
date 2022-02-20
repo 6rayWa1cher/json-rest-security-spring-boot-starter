@@ -7,6 +7,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -31,10 +32,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private static final String AUTHORIZATION_HEADER = "Authorization";
 	private final JwtTokenService jwtTokenService;
 	private final AuthenticationManager authenticationManager;
+	private final AuthenticationEntryPoint authenticationEntryPoint;
 
-	public JwtAuthenticationFilter(JwtTokenService jwtTokenService, AuthenticationManager authenticationManager) {
+	public JwtAuthenticationFilter(JwtTokenService jwtTokenService, AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationEntryPoint) {
 		this.jwtTokenService = jwtTokenService;
 		this.authenticationManager = authenticationManager;
+		this.authenticationEntryPoint = authenticationEntryPoint;
 	}
 
 	/**
@@ -77,8 +80,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			}
 		} catch (AuthenticationException e) {
 			SecurityContextHolder.clearContext();
-			logger.debug("AuthenticationException on jwt", e);
-			response.setStatus(403);
+			authenticationEntryPoint.commence(request, response, e);
 			return;
 		}
 		filterChain.doFilter(request, response);

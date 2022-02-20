@@ -2,6 +2,7 @@ package com.a6raywa1cher.jsonrestsecurity.authentication;
 
 import com.a6raywa1cher.jsonrestsecurity.component.SecurityComponentsConfiguration;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -27,6 +28,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
 		if (authException instanceof BadCredentialsException ||
+			authException instanceof CredentialsExpiredException ||
 			(
 				authException instanceof InsufficientAuthenticationException &&
 					Objects.equals(authException.getMessage(), "Full authentication is required to access this resource")

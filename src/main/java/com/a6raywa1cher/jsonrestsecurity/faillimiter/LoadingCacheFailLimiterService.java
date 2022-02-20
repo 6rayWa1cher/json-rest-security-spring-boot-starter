@@ -66,4 +66,9 @@ public class LoadingCacheFailLimiterService implements FailLimiterService {
 	public boolean isBlocked(String key) {
 		return attemptsCache.getUnchecked(key) >= maxAttempts;
 	}
+
+	@Override
+	public void resetStats() {
+		attemptsCache.invalidateAll();
+	}
 }

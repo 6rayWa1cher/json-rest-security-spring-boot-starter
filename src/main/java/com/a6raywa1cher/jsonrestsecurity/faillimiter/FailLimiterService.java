@@ -20,4 +20,9 @@ public interface FailLimiterService {
 	 * @return is client banned
 	 */
 	boolean isBlocked(String key);
+
+	/**
+	 * Reset all recorded stats
+	 */
+	void resetStats();
 }

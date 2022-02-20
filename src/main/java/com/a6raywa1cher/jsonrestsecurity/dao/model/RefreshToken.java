@@ -4,6 +4,7 @@ import com.a6raywa1cher.jsonrestsecurity.dao.repo.RefreshTokenRepository;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Holds refresh token info.
@@ -16,6 +17,10 @@ public class RefreshToken implements Cloneable {
 	private LocalDateTime expiringAt;
 
 	public RefreshToken() {
+	}
+
+	public static RefreshToken uuidToken(LocalDateTime expiringAt) {
+		return new RefreshToken(UUID.randomUUID().toString(), UUID.randomUUID().toString(), expiringAt);
 	}
 
 	public RefreshToken(String id, String token, LocalDateTime expiringAt) {

@@ -85,7 +85,7 @@ public class JsonRestWebSecurityConfigurer extends WebSecurityConfigurerAdapter 
 		http.httpBasic()
 			.authenticationEntryPoint(authenticationEntryPoint);
 		http.formLogin();
-		http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenService, authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenService, authenticationManagerBean(), authenticationEntryPoint), UsernamePasswordAuthenticationFilter.class);
 		http.addFilterAfter(new LastVisitFilter(userService, authenticationResolver), SecurityContextHolderAwareRequestFilter.class);
 		http.addFilterBefore(failLimiterFilter, JwtAuthenticationFilter.class);
 	}

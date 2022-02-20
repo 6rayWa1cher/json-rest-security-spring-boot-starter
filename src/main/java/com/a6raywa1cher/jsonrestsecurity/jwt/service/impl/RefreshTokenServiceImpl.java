@@ -6,13 +6,14 @@ import com.a6raywa1cher.jsonrestsecurity.dao.repo.RefreshTokenRepository;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.BlockedRefreshTokensService;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.RefreshTokenService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * The default implementation of {@link RefreshTokenService}.
@@ -35,18 +36,17 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 	}
 
 	@Override
+	@Transactional(isolation = Isolation.SERIALIZABLE)
 	public RefreshToken issue(IUser user) {
 		List<RefreshToken> tokenList = repository.findAllByUser(user);
-		if (tokenList.size() > maxTokensPerUser) {
+		if (tokenList.size() >= maxTokensPerUser) {
 			repository.deleteAllFromUser(user, tokenList.stream()
 				.sorted(Comparator.comparing(RefreshToken::getExpiringAt))
-				.limit(tokenList.size() - maxTokensPerUser)
+				.limit(tokenList.size() - maxTokensPerUser + 1)
 				.peek(rt -> blockedTokensService.invalidate(rt.getId()))
 				.toList());
 		}
-		RefreshToken refreshToken = new RefreshToken(
-			UUID.randomUUID().toString(),
-			UUID.randomUUID().toString(),
+		RefreshToken refreshToken = RefreshToken.uuidToken(
 			LocalDateTime.now().plus(refreshTokenDuration)
 		);
 		return repository.save(user, refreshToken);
@@ -58,14 +58,17 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 	}
 
 	@Override
+	@Transactional(isolation = Isolation.SERIALIZABLE)
 	public void invalidate(IUser user, RefreshToken refreshToken) {
 		blockedTokensService.invalidate(refreshToken.getId());
 		repository.delete(user, refreshToken);
 	}
 
 	@Override
+	@Transactional(isolation = Isolation.SERIALIZABLE)
 	public void invalidateAll(IUser user) {
-		repository.findAllByUser(user)
-			.forEach(rt -> blockedTokensService.invalidate(rt.getId()));
+		List<RefreshToken> allByUser = repository.findAllByUser(user);
+		allByUser.forEach(rt -> blockedTokensService.invalidate(rt.getId()));
+		repository.deleteAllFromUser(user, allByUser);
 	}
 }
