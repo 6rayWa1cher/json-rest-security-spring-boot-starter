@@ -162,12 +162,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <!--                <configuration>-->
-                <!--                    <gpgArguments>-->
-                <!--                        <arg>&#45;&#45;pinentry-mode</arg>-->
-                <!--                        <arg>loopback</arg>-->
-                <!--                    </gpgArguments>-->
-                <!--                </configuration>-->
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -187,6 +181,21 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Automatic-Module-Name>com.a6raywa1cher.jsonrestsecurity</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
     </build>
