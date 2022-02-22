@@ -137,7 +137,7 @@ public abstract class AbstractFullApplicationTests<T extends AbstractUser> {
 
 	@Test
 	@Transactional
-	void jwtLoginBlocksInvalidUser() throws Exception {
+	void jwtLoginBlocksInvalidUser() {
 		createNewUser(USERNAME, PASSWORD);
 		assertThrows(AssertionError.class, () -> getJwtTokens(USERNAME, PASSWORD + "1"), "Status");
 		assertThrows(AssertionError.class, () -> getJwtTokens(USERNAME + "1", PASSWORD), "Status");
@@ -301,6 +301,18 @@ public abstract class AbstractFullApplicationTests<T extends AbstractUser> {
 		};
 	}
 
+	@Test
+	@Transactional
+	void firstUserTest() throws Exception {
+		new WithUser("admin", "admin", false) {
+			@Override
+			void run() throws Exception {
+				securePerform(get("/auth/check"))
+					.andExpect(status().isOk());
+			}
+		};
+	}
+
 	abstract class WithUser {
 		protected String accessToken;
 
@@ -308,13 +320,17 @@ public abstract class AbstractFullApplicationTests<T extends AbstractUser> {
 
 		protected long userId;
 
-		public WithUser(String username, String password) throws Exception {
-			createNewUser(username, password);
-			JwtRefreshPair jwtTokens = getJwtTokens(USERNAME, PASSWORD);
+		public WithUser(String username, String password, boolean create) throws Exception {
+			if (create) createNewUser(username, password);
+			JwtRefreshPair jwtTokens = getJwtTokens(username, password);
 			this.accessToken = jwtTokens.getAccessToken();
 			this.refreshToken = jwtTokens.getRefreshToken();
 			this.userId = jwtTokens.getUserId();
 			this.run();
+		}
+
+		public WithUser(String username, String password) throws Exception {
+			this(username, password, true);
 		}
 
 		abstract void run() throws Exception;

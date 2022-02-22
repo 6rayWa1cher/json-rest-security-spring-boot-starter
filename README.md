@@ -198,19 +198,23 @@ Properties for fail-limiter are listed below.
 
 #### Optional properties
 
-| Property name                                        | Description                                     | Default value      |
-|------------------------------------------------------|-------------------------------------------------|--------------------|
-| `json-rest-security.enable`                          | Enable or disable `json-rest-security`          | true               |
-| `json-rest-security.jwt.access-duration`             | Access token duration                           | PT5M               |
-| `json-rest-security.jwt.refresh-duration`            | Refresh token duration                          | P14D               |
-| `json-rest-security.jwt.max-refresh-tokens-per-user` | Max refresh token count per user                | 10                 |
-| `json-rest-security.jwt.issuer-name`                 | Issuer name (presented in JWT tokens)           | json-rest-security |
-| `json-rest-security.fail-limiter.enable`             | Enable or disable fail-limiter module           | true               |
-| `json-rest-security.fail-limiter.block-duration`     | Client block time after `max-attempts` fails    | PT1M               |
-| `json-rest-security.fail-limiter.max-attempts`       | Max attempts to fail before ban on fail-limiter | 5                  |
-| `json-rest-security.fail-limiter.max-cache-size`     | Max block list size                             | 30000              |
-| `json-rest-security.enable-auth-controller`          | Enable or disable AuthController                | true               |
-| `json-rest-security.enable-default-web-config`       | Enable or disable JsonRestWebSecurityConfigurer | true               |
+| Property name                                        | Description                                           | Default value      |
+|------------------------------------------------------|-------------------------------------------------------|--------------------|
+| `json-rest-security.enable`                          | Enable or disable `json-rest-security`                | true               |
+| `json-rest-security.enable-auth-controller`          | Enable or disable AuthController                      | true               |
+| `json-rest-security.enable-default-web-config`       | Enable or disable JsonRestWebSecurityConfigurer       | true               |
+| `json-rest-security.jwt.access-duration`             | Access token duration                                 | PT5M               |
+| `json-rest-security.jwt.refresh-duration`            | Refresh token duration                                | P14D               |
+| `json-rest-security.jwt.max-refresh-tokens-per-user` | Max refresh token count per user                      | 10                 |
+| `json-rest-security.jwt.issuer-name`                 | Issuer name (presented in JWT tokens)                 | json-rest-security |
+| `json-rest-security.fail-limiter.enable`             | Enable or disable fail-limiter module                 | true               |
+| `json-rest-security.fail-limiter.block-duration`     | Client block time after `max-attempts` fails          | PT1M               |
+| `json-rest-security.fail-limiter.max-attempts`       | Max attempts to fail before ban on fail-limiter       | 5                  |
+| `json-rest-security.fail-limiter.max-cache-size`     | Max block list size                                   | 30000              |
+| `json-rest-security.first-user.enable`               | Enable or disable FirstUserCreatorApplicationListener | true               |
+| `json-rest-security.first-user.username`             | First user's username                                 | admin              |
+| `json-rest-security.first-user.password`             | First user's password                                 | admin              |
+| `json-rest-security.first-user.role`                 | First user's role                                     | ADMIN              |
 
 ## Contribution
 

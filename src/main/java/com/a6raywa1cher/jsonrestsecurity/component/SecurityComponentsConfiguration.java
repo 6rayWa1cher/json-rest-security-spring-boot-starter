@@ -12,6 +12,7 @@ import com.a6raywa1cher.jsonrestsecurity.web.JsonRestSecurityConfigProperties;
 import com.a6raywa1cher.jsonrestsecurity.web.JsonRestSecurityPropertiesConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -30,6 +31,12 @@ import java.util.Collections;
 @Import(JsonRestSecurityPropertiesConfiguration.class)
 @SuppressWarnings("SpringFacetCodeInspection")
 public class SecurityComponentsConfiguration {
+	private final JsonRestSecurityConfigProperties.FirstUserConfigProperties userConfigProperties;
+
+	public SecurityComponentsConfiguration(JsonRestSecurityConfigProperties configProperties) {
+		this.userConfigProperties = configProperties.getFirstUser();
+	}
+
 	/**
 	 * Returns default CORS settings bean based on {@code json-rest-security.cors-allowed-origins} properties
 	 *
@@ -73,5 +80,17 @@ public class SecurityComponentsConfiguration {
 	@ConditionalOnMissingBean(AuthenticationEntryPoint.class)
 	public AuthenticationEntryPoint authenticationEntryPoint() {
 		return new CustomAuthenticationEntryPoint();
+	}
+
+	@Bean
+	@ConditionalOnMissingBean(FirstUserCreatorApplicationListener.class)
+	@ConditionalOnProperty(prefix = "json-rest-security.first-user", value = "enable", havingValue = "true")
+	public FirstUserCreatorApplicationListener firstAdminCreatorApplicationListener(UserService<?> userService) {
+		return new FirstUserCreatorApplicationListener(
+			userConfigProperties.getUsername(),
+			userConfigProperties.getPassword(),
+			userConfigProperties.getRole(),
+			userService
+		);
 	}
 }

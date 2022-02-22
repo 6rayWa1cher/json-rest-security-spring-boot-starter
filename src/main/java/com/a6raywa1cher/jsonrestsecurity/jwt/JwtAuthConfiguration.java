@@ -10,7 +10,7 @@ import com.a6raywa1cher.jsonrestsecurity.jwt.service.impl.JwtRefreshPairServiceI
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.impl.JwtTokenServiceImpl;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.impl.LoadingCacheBlockedRefreshTokensService;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.impl.RefreshTokenServiceImpl;
-import com.a6raywa1cher.jsonrestsecurity.utils.RandomUtils;
+import com.a6raywa1cher.jsonrestsecurity.utils.StringUtils;
 import com.a6raywa1cher.jsonrestsecurity.web.JsonRestSecurityConfigProperties;
 import com.a6raywa1cher.jsonrestsecurity.web.JsonRestSecurityPropertiesConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -65,7 +65,7 @@ public class JwtAuthConfiguration {
 		String secret = properties.getSecret();
 		if (Objects.equals(secret, "generate")) {
 			log.warn("\n\n\nUsing auto-generated JWT secret will cause every token to become invalid after an application restart!\nSet web-security.jwt.secret property (for example, visit this website: https://www.grc.com/passwords.htm )\n\n\n");
-			secret = RandomUtils.randomString(128);
+			secret = StringUtils.randomString(128);
 		}
 		return new JwtTokenServiceImpl(
 			properties.getIssuerName(),

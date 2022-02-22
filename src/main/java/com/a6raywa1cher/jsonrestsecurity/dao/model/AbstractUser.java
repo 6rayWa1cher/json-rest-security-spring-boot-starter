@@ -10,8 +10,11 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static com.a6raywa1cher.jsonrestsecurity.utils.StringUtils.erasePassword;
 
 /**
  * Abstract implementation on {@link IUser}.
@@ -49,7 +52,7 @@ public abstract class AbstractUser implements IUser {
 	@Column(name = "refresh_tokens", columnDefinition = "jsonb")
 	@Type(type = "json")
 	@JsonIgnore
-	private List<RefreshToken> refreshTokens;
+	private List<RefreshToken> refreshTokens = new ArrayList<>();
 
 	@Column(name = "last_visit_at")
 	@CreatedDate
@@ -120,6 +123,6 @@ public abstract class AbstractUser implements IUser {
 	}
 
 	public String toString() {
-		return "AbstractUser(id=" + this.getId() + ", username=" + this.getUsername() + ", userRole=" + this.getUserRole() + ", password=" + this.getPassword() + ", refreshTokens=" + this.getRefreshTokens() + ", lastVisitAt=" + this.getLastVisitAt() + ")";
+		return "AbstractUser(id=" + this.getId() + ", username=" + this.getUsername() + ", userRole=" + this.getUserRole() + ", password=" + erasePassword(this.getPassword()) + ", refreshTokens=" + this.getRefreshTokens() + ", lastVisitAt=" + this.getLastVisitAt() + ")";
 	}
 }

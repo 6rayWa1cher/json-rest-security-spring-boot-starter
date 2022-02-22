@@ -23,6 +23,10 @@ public class JsonRestSecurityConfigProperties {
 	@Valid
 	private JsonRestSecurityConfigProperties.FailLimiterConfigProperties failLimiter = new FailLimiterConfigProperties();
 
+	@NotNull
+	@Valid
+	private JsonRestSecurityConfigProperties.FirstUserConfigProperties firstUser = new FirstUserConfigProperties();
+
 	private String[] corsAllowedOrigins = new String[0];
 
 	private boolean enableDefaultWebConfig;
@@ -39,6 +43,7 @@ public class JsonRestSecurityConfigProperties {
 		return "JsonRestSecurityConfigProperties{" +
 			"jwt=" + jwt +
 			", failLimiter=" + failLimiter +
+			", firstUser=" + firstUser +
 			", corsAllowedOrigins=" + Arrays.toString(corsAllowedOrigins) +
 			", enableDefaultWebConfig=" + enableDefaultWebConfig +
 			", enableAuthController=" + enableAuthController +
@@ -51,14 +56,62 @@ public class JsonRestSecurityConfigProperties {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		JsonRestSecurityConfigProperties that = (JsonRestSecurityConfigProperties) o;
-		return enableDefaultWebConfig == that.enableDefaultWebConfig && enableAuthController == that.enableAuthController && enable == that.enable && Objects.equals(jwt, that.jwt) && Objects.equals(failLimiter, that.failLimiter) && Arrays.equals(corsAllowedOrigins, that.corsAllowedOrigins);
+		return enableDefaultWebConfig == that.enableDefaultWebConfig && enableAuthController == that.enableAuthController && enable == that.enable && Objects.equals(jwt, that.jwt) && Objects.equals(failLimiter, that.failLimiter) && Objects.equals(firstUser, that.firstUser) && Arrays.equals(corsAllowedOrigins, that.corsAllowedOrigins);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = Objects.hash(jwt, failLimiter, enableDefaultWebConfig, enableAuthController, enable);
+		int result = Objects.hash(jwt, failLimiter, firstUser, enableDefaultWebConfig, enableAuthController, enable);
 		result = 31 * result + Arrays.hashCode(corsAllowedOrigins);
 		return result;
+	}
+
+	public FirstUserConfigProperties getFirstUser() {
+		return firstUser;
+	}
+
+	public void setFirstUser(FirstUserConfigProperties firstUser) {
+		this.firstUser = firstUser;
+	}
+
+	public JwtConfigProperties getJwt() {
+		return jwt;
+	}
+
+	public void setJwt(JwtConfigProperties jwt) {
+		this.jwt = jwt;
+	}
+
+	public FailLimiterConfigProperties getFailLimiter() {
+		return failLimiter;
+	}
+
+	public void setFailLimiter(FailLimiterConfigProperties failLimiter) {
+		this.failLimiter = failLimiter;
+	}
+
+	public String[] getCorsAllowedOrigins() {
+		return corsAllowedOrigins;
+	}
+
+	public void setCorsAllowedOrigins(String[] corsAllowedOrigins) {
+		this.corsAllowedOrigins = corsAllowedOrigins;
+	}
+
+	public boolean isEnableDefaultWebConfig() {
+		return enableDefaultWebConfig;
+	}
+
+	public void setEnableDefaultWebConfig(boolean enableDefaultWebConfig) {
+		this.enableDefaultWebConfig = enableDefaultWebConfig;
+	}
+
+	public boolean isEnableAuthController() {
+		return enableAuthController;
+	}
+
+	public void setEnableAuthController(boolean enableAuthController) {
+		this.enableAuthController = enableAuthController;
 	}
 
 	public boolean isEnable() {
@@ -67,46 +120,6 @@ public class JsonRestSecurityConfigProperties {
 
 	public void setEnable(boolean enable) {
 		this.enable = enable;
-	}
-
-	public @Valid JwtConfigProperties getJwt() {
-		return this.jwt;
-	}
-
-	public void setJwt(@Valid JwtConfigProperties jwt) {
-		this.jwt = jwt;
-	}
-
-	public @Valid JsonRestSecurityConfigProperties.FailLimiterConfigProperties getFailLimiter() {
-		return this.failLimiter;
-	}
-
-	public void setFailLimiter(@Valid JsonRestSecurityConfigProperties.FailLimiterConfigProperties failLimiter) {
-		this.failLimiter = failLimiter;
-	}
-
-	public String[] getCorsAllowedOrigins() {
-		return this.corsAllowedOrigins;
-	}
-
-	public void setCorsAllowedOrigins(String[] corsAllowedOrigins) {
-		this.corsAllowedOrigins = corsAllowedOrigins;
-	}
-
-	public boolean isEnableDefaultWebConfig() {
-		return this.enableDefaultWebConfig;
-	}
-
-	public void setEnableDefaultWebConfig(boolean enableDefaultWebConfig) {
-		this.enableDefaultWebConfig = enableDefaultWebConfig;
-	}
-
-	public boolean isEnableAuthController() {
-		return this.enableAuthController;
-	}
-
-	public void setEnableAuthController(boolean enableAuthController) {
-		this.enableAuthController = enableAuthController;
 	}
 
 	public static final class FailLimiterConfigProperties {
@@ -199,84 +212,136 @@ public class JsonRestSecurityConfigProperties {
 		public JwtConfigProperties() {
 		}
 
-		public @PositiveOrZero int getMaxRefreshTokensPerUser() {
-			return this.maxRefreshTokensPerUser;
+		@Override
+		public String toString() {
+			return "JwtConfigProperties{" +
+				"maxRefreshTokensPerUser=" + maxRefreshTokensPerUser +
+				", secret='" + secret + '\'' +
+				", accessDuration=" + accessDuration +
+				", refreshDuration=" + refreshDuration +
+				", issuerName='" + issuerName + '\'' +
+				'}';
 		}
 
-		public void setMaxRefreshTokensPerUser(@PositiveOrZero int maxRefreshTokensPerUser) {
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			JwtConfigProperties that = (JwtConfigProperties) o;
+			return maxRefreshTokensPerUser == that.maxRefreshTokensPerUser && Objects.equals(secret, that.secret) && Objects.equals(accessDuration, that.accessDuration) && Objects.equals(refreshDuration, that.refreshDuration) && Objects.equals(issuerName, that.issuerName);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(maxRefreshTokensPerUser, secret, accessDuration, refreshDuration, issuerName);
+		}
+
+		public int getMaxRefreshTokensPerUser() {
+			return maxRefreshTokensPerUser;
+		}
+
+		public void setMaxRefreshTokensPerUser(int maxRefreshTokensPerUser) {
 			this.maxRefreshTokensPerUser = maxRefreshTokensPerUser;
 		}
 
-		public @NotBlank String getSecret() {
-			return this.secret;
+		public String getSecret() {
+			return secret;
 		}
 
-		public void setSecret(@NotBlank String secret) {
+		public void setSecret(String secret) {
 			this.secret = secret;
 		}
 
-		public @NotNull Duration getAccessDuration() {
-			return this.accessDuration;
+		public Duration getAccessDuration() {
+			return accessDuration;
 		}
 
-		public void setAccessDuration(@NotNull Duration accessDuration) {
+		public void setAccessDuration(Duration accessDuration) {
 			this.accessDuration = accessDuration;
 		}
 
-		public @NotNull Duration getRefreshDuration() {
-			return this.refreshDuration;
+		public Duration getRefreshDuration() {
+			return refreshDuration;
 		}
 
-		public void setRefreshDuration(@NotNull Duration refreshDuration) {
+		public void setRefreshDuration(Duration refreshDuration) {
 			this.refreshDuration = refreshDuration;
 		}
 
-		public @NotNull String getIssuerName() {
-			return this.issuerName;
+		public String getIssuerName() {
+			return issuerName;
 		}
 
-		public void setIssuerName(@NotNull String issuerName) {
+		public void setIssuerName(String issuerName) {
 			this.issuerName = issuerName;
 		}
+	}
 
-		public boolean equals(final Object o) {
-			if (o == this) return true;
-			if (!(o instanceof final JwtConfigProperties other))
-				return false;
-			if (this.getMaxRefreshTokensPerUser() != other.getMaxRefreshTokensPerUser()) return false;
-			final Object this$secret = this.getSecret();
-			final Object other$secret = other.getSecret();
-			if (!Objects.equals(this$secret, other$secret)) return false;
-			final Object this$accessDuration = this.getAccessDuration();
-			final Object other$accessDuration = other.getAccessDuration();
-			if (!Objects.equals(this$accessDuration, other$accessDuration))
-				return false;
-			final Object this$refreshDuration = this.getRefreshDuration();
-			final Object other$refreshDuration = other.getRefreshDuration();
-			if (!Objects.equals(this$refreshDuration, other$refreshDuration))
-				return false;
-			final Object this$issuerName = this.getIssuerName();
-			final Object other$issuerName = other.getIssuerName();
-			return Objects.equals(this$issuerName, other$issuerName);
+	public static final class FirstUserConfigProperties {
+		private boolean enable;
+
+		private String username;
+
+		private String password;
+
+		private String role;
+
+		public FirstUserConfigProperties() {
 		}
 
-		public int hashCode() {
-			final int PRIME = 59;
-			int result = 1;
-			result = result * PRIME + this.getMaxRefreshTokensPerUser();
-			final Object $secret = this.getSecret();
-			result = result * PRIME + ($secret == null ? 43 : $secret.hashCode());
-			final Object $accessDuration = this.getAccessDuration();
-			result = result * PRIME + ($accessDuration == null ? 43 : $accessDuration.hashCode());
-			final Object $refreshDuration = this.getRefreshDuration();
-			result = result * PRIME + ($refreshDuration == null ? 43 : $refreshDuration.hashCode());
-			final Object $issuerName = this.getIssuerName();
-			result = result * PRIME + ($issuerName == null ? 43 : $issuerName.hashCode());
-			return result;
-		}
-
+		@Override
 		public String toString() {
-			return "WebSecurityConfigProperties.JwtConfigProperties(maxRefreshTokensPerUser=" + this.getMaxRefreshTokensPerUser() + ", secret=" + this.getSecret() + ", accessDuration=" + this.getAccessDuration() + ", refreshDuration=" + this.getRefreshDuration() + ", issuerName=" + this.getIssuerName() + ")";
+			return "FirstUserConfigProperties{" +
+				"enable=" + enable +
+				", username='" + username + '\'' +
+				", password='" + password + '\'' +
+				", role='" + role + '\'' +
+				'}';
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			FirstUserConfigProperties that = (FirstUserConfigProperties) o;
+			return enable == that.enable && Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(role, that.role);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(enable, username, password, role);
+		}
+
+		public boolean isEnable() {
+			return enable;
+		}
+
+		public void setEnable(boolean enable) {
+			this.enable = enable;
+		}
+
+		public String getUsername() {
+			return username;
+		}
+
+		public void setUsername(String username) {
+			this.username = username;
+		}
+
+		public String getPassword() {
+			return password;
+		}
+
+		public void setPassword(String password) {
+			this.password = password;
+		}
+
+		public String getRole() {
+			return role;
+		}
+
+		public void setRole(String role) {
+			this.role = role;
 		}
 	}
 }
