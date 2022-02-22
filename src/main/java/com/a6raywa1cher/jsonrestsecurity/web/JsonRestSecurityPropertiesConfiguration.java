@@ -7,5 +7,6 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @EnableConfigurationProperties(JsonRestSecurityConfigProperties.class)
 @PropertySource("classpath:jrs-application.properties")
+@SuppressWarnings("SpringFacetCodeInspection")
 public class JsonRestSecurityPropertiesConfiguration {
 }

@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * @see AuthenticationResolver
  * @see SecurityComponentsConfiguration
  */
+@SuppressWarnings("ClassCanBeRecord")
 public class AuthenticationResolverImpl implements AuthenticationResolver {
 	private final UserService<?> userService;
 

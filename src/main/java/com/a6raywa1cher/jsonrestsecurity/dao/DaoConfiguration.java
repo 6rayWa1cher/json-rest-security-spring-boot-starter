@@ -22,6 +22,7 @@ import static com.a6raywa1cher.jsonrestsecurity.utils.LogUtils.log;
  */
 @Configuration
 @Import(PasswordEncoderConfiguration.class)
+@SuppressWarnings("SpringFacetCodeInspection")
 public class DaoConfiguration {
 	private final ApplicationContext applicationContext;
 

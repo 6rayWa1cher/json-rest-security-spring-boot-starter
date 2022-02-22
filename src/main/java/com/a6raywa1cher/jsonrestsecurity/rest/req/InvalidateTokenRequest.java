@@ -14,11 +14,13 @@ public class InvalidateTokenRequest {
 	@Positive
 	private Long userId;
 
+	@SuppressWarnings("unused")
 	public InvalidateTokenRequest(String refreshToken, Long userId) {
 		this.refreshToken = refreshToken;
 		this.userId = userId;
 	}
 
+	@SuppressWarnings("unused")
 	public InvalidateTokenRequest() {
 	}
 

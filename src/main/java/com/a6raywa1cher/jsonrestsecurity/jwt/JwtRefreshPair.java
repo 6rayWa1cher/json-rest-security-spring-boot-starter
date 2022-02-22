@@ -8,6 +8,7 @@ import java.util.Objects;
 /**
  * DTO object with access/refresh tokens and misc info
  */
+@SuppressWarnings("unused")
 public class JwtRefreshPair {
 	private String refreshToken;
 

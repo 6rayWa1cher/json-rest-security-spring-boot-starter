@@ -14,11 +14,13 @@ public class GetNewJwtTokenRequest {
 	@Positive
 	private Long userId;
 
+	@SuppressWarnings("unused")
 	public GetNewJwtTokenRequest(String refreshToken, Long userId) {
 		this.refreshToken = refreshToken;
 		this.userId = userId;
 	}
 
+	@SuppressWarnings("unused")
 	public GetNewJwtTokenRequest() {
 	}
 

@@ -20,6 +20,7 @@ import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 @ConditionalOnProperty(prefix = "web-security.fail-limiter", name = "enable", havingValue = "true",
 	matchIfMissing = true)
 @Import(JsonRestSecurityPropertiesConfiguration.class)
+@SuppressWarnings("SpringFacetCodeInspection")
 public class FailLimiterConfiguration {
 	private final JsonRestSecurityConfigProperties.FailLimiterConfigProperties properties;
 

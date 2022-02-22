@@ -20,13 +20,14 @@ import org.springframework.context.annotation.Import;
 	JwtAuthConfiguration.class,
 	DaoConfiguration.class
 })
+@SuppressWarnings("SpringFacetCodeInspection")
 public class AuthControllerConfiguration {
 	@Bean
 	public AuthController authController(
 		AuthenticationResolver authenticationResolver,
 		RefreshTokenService refreshTokenService,
 		JwtRefreshPairService jwtRefreshPairService,
-		UserService userService
+		UserService<?> userService
 	) {
 		return new AuthController(authenticationResolver, refreshTokenService, jwtRefreshPairService, userService);
 	}

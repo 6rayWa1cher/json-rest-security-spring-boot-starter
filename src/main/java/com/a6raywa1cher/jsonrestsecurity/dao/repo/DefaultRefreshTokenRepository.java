@@ -14,11 +14,11 @@ import java.util.Optional;
  *
  * @see com.a6raywa1cher.jsonrestsecurity.dao.DaoConfiguration
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
-public class DefaultRefreshTokenRepository implements RefreshTokenRepository {
-	private final IUserRepository userRepository;
+@SuppressWarnings({"ClassCanBeRecord", "unchecked"})
+public class DefaultRefreshTokenRepository<T extends IUser> implements RefreshTokenRepository {
+	private final IUserRepository<T> userRepository;
 
-	public DefaultRefreshTokenRepository(IUserRepository userRepository) {
+	public DefaultRefreshTokenRepository(IUserRepository<T> userRepository) {
 		this.userRepository = userRepository;
 	}
 
@@ -35,7 +35,7 @@ public class DefaultRefreshTokenRepository implements RefreshTokenRepository {
 		List<RefreshToken> refreshTokens = new ArrayList<>(user.getRefreshTokens());
 		refreshTokens.removeIf(rt -> idsToDelete.contains(rt.getId()));
 		user.setRefreshTokens(refreshTokens);
-		userRepository.save(user);
+		userRepository.save((T) user);
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class DefaultRefreshTokenRepository implements RefreshTokenRepository {
 		refreshTokens.removeIf(rt -> rt.getId().equals(refreshToken.getId()));
 		refreshTokens.add(refreshToken);
 		user.setRefreshTokens(refreshTokens);
-		userRepository.save(user);
+		userRepository.save((T) user);
 		return refreshToken;
 	}
 
@@ -61,6 +61,6 @@ public class DefaultRefreshTokenRepository implements RefreshTokenRepository {
 		List<RefreshToken> refreshTokens = new ArrayList<>(user.getRefreshTokens());
 		refreshTokens.removeIf(rt -> rt.getId().equals(refreshToken.getId()));
 		user.setRefreshTokens(refreshTokens);
-		userRepository.save(user);
+		userRepository.save((T) user);
 	}
 }

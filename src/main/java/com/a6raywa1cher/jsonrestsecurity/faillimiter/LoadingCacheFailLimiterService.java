@@ -46,6 +46,7 @@ public class LoadingCacheFailLimiterService implements FailLimiterService {
 			})
 			.build(new CacheLoader<>() {
 				@Override
+				@SuppressWarnings("NullableProblems")
 				public Integer load(String key) {
 					return 0;
 				}

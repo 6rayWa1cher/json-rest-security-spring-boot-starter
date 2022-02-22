@@ -241,24 +241,23 @@ public class JsonRestSecurityConfigProperties {
 
 		public boolean equals(final Object o) {
 			if (o == this) return true;
-			if (!(o instanceof JwtConfigProperties))
+			if (!(o instanceof final JwtConfigProperties other))
 				return false;
-			final JwtConfigProperties other = (JwtConfigProperties) o;
 			if (this.getMaxRefreshTokensPerUser() != other.getMaxRefreshTokensPerUser()) return false;
 			final Object this$secret = this.getSecret();
 			final Object other$secret = other.getSecret();
-			if (this$secret == null ? other$secret != null : !this$secret.equals(other$secret)) return false;
+			if (!Objects.equals(this$secret, other$secret)) return false;
 			final Object this$accessDuration = this.getAccessDuration();
 			final Object other$accessDuration = other.getAccessDuration();
-			if (this$accessDuration == null ? other$accessDuration != null : !this$accessDuration.equals(other$accessDuration))
+			if (!Objects.equals(this$accessDuration, other$accessDuration))
 				return false;
 			final Object this$refreshDuration = this.getRefreshDuration();
 			final Object other$refreshDuration = other.getRefreshDuration();
-			if (this$refreshDuration == null ? other$refreshDuration != null : !this$refreshDuration.equals(other$refreshDuration))
+			if (!Objects.equals(this$refreshDuration, other$refreshDuration))
 				return false;
 			final Object this$issuerName = this.getIssuerName();
 			final Object other$issuerName = other.getIssuerName();
-			return this$issuerName == null ? other$issuerName == null : this$issuerName.equals(other$issuerName);
+			return Objects.equals(this$issuerName, other$issuerName);
 		}
 
 		public int hashCode() {

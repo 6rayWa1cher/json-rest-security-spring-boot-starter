@@ -30,6 +30,7 @@ import static com.a6raywa1cher.jsonrestsecurity.utils.LogUtils.log;
 @Configuration
 @EnableTransactionManagement
 @Import({JsonRestSecurityPropertiesConfiguration.class, DaoConfiguration.class})
+@SuppressWarnings("SpringFacetCodeInspection")
 public class JwtAuthConfiguration {
 	private final JsonRestSecurityConfigProperties.JwtConfigProperties properties;
 

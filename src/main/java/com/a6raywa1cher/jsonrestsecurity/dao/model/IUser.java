@@ -21,6 +21,8 @@ public interface IUser {
 
 	void setLastVisitAt(LocalDateTime lastVisit);
 
+	String getUsername();
+
 	String getPassword();
 
 	List<RefreshToken> getRefreshTokens();

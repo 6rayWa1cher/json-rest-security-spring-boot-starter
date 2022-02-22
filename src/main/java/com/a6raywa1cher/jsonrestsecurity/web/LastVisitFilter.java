@@ -14,11 +14,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-public class LastVisitFilter extends OncePerRequestFilter {
-	private final UserService userService;
+@SuppressWarnings({"unchecked", "NullableProblems"})
+public class LastVisitFilter<T extends IUser> extends OncePerRequestFilter {
+	private final UserService<T> userService;
 	private final AuthenticationResolver resolver;
 
-	public LastVisitFilter(UserService userService, AuthenticationResolver resolver) {
+	public LastVisitFilter(UserService<T> userService, AuthenticationResolver resolver) {
 		this.userService = userService;
 		this.resolver = resolver;
 	}
@@ -30,7 +31,7 @@ public class LastVisitFilter extends OncePerRequestFilter {
 		} finally {
 			try {
 				if (SecurityContextHolder.getContext().getAuthentication() != null) {
-					IUser user = resolver.getUser();
+					T user = (T) resolver.getUser();
 					if (user.getLastVisitAt().plusSeconds(30).isBefore(LocalDateTime.now())) {
 						userService.updateLastVisitAt(user);
 					}

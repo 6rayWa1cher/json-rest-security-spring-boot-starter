@@ -45,8 +45,9 @@ import org.springframework.web.cors.CorsConfigurationSource;
 	JsonRestSecurityPropertiesConfiguration.class,
 	FailLimiterConfiguration.class
 })
+@SuppressWarnings("SpringFacetCodeInspection")
 public class JsonRestWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
-	private UserService userService;
+	private UserService<?> userService;
 
 	private JwtTokenService jwtTokenService;
 
@@ -101,7 +102,7 @@ public class JsonRestWebSecurityConfigurer extends WebSecurityConfigurerAdapter 
 			.authenticationEntryPoint(authenticationEntryPoint);
 		http.formLogin();
 		http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenService, authenticationManagerBean(), authenticationEntryPoint), UsernamePasswordAuthenticationFilter.class);
-		http.addFilterAfter(new LastVisitFilter(userService, authenticationResolver), SecurityContextHolderAwareRequestFilter.class);
+		http.addFilterAfter(new LastVisitFilter<>(userService, authenticationResolver), SecurityContextHolderAwareRequestFilter.class);
 		http.addFilterBefore(failLimiterFilter, JwtAuthenticationFilter.class);
 	}
 
@@ -122,12 +123,13 @@ public class JsonRestWebSecurityConfigurer extends WebSecurityConfigurerAdapter 
 		}
 	}
 
+	@SuppressWarnings("unused")
 	public void setUseAnyMatcher(boolean useAnyMatcher) {
 		this.useAnyMatcher = useAnyMatcher;
 	}
 
 	@Autowired
-	public void setUserService(UserService userService) {
+	public void setUserService(UserService<?> userService) {
 		this.userService = userService;
 	}
 

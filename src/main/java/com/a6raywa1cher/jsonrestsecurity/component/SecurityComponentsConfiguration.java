@@ -28,6 +28,7 @@ import java.util.Collections;
  */
 @Configuration
 @Import(JsonRestSecurityPropertiesConfiguration.class)
+@SuppressWarnings("SpringFacetCodeInspection")
 public class SecurityComponentsConfiguration {
 	/**
 	 * Returns default CORS settings bean based on {@code json-rest-security.cors-allowed-origins} properties
@@ -52,7 +53,7 @@ public class SecurityComponentsConfiguration {
 	@Bean
 	@ConditionalOnBean(UserService.class)
 	@ConditionalOnMissingBean(AuthenticationResolver.class)
-	public AuthenticationResolver authenticationResolver(UserService userService) {
+	public AuthenticationResolver authenticationResolver(UserService<?> userService) {
 		return new AuthenticationResolverImpl(userService);
 	}
 

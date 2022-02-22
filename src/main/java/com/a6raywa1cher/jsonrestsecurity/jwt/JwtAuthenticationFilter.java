@@ -45,12 +45,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	 * <br/>
 	 * Supports only {@code jwt} and {@code bearer} prefixes.
 	 *
-	 * @param request  HttpServletRequest instance
-	 * @param response HttpServletResponse instance
+	 * @param request HttpServletRequest instance
 	 * @return JwtAuthentication or null
 	 * @throws AuthenticationException if the token was found but {@link #jwtTokenService} couldn't extract/validate it.
 	 */
-	private Authentication check(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+	private Authentication check(HttpServletRequest request) throws AuthenticationException {
 		if (request.getHeader(AUTHORIZATION_HEADER) == null) {
 			return null;
 		}
@@ -70,9 +69,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	}
 
 	@Override
+	@SuppressWarnings("NullableProblems")
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 		try {
-			Authentication authentication = check(request, response);
+			Authentication authentication = check(request);
 			if (authentication != null) {
 				Authentication auth = authenticationManager.authenticate(authentication);
 				SecurityContextHolder.createEmptyContext();

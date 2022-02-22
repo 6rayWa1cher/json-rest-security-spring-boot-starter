@@ -8,6 +8,7 @@ import java.util.Objects;
  *
  * @see com.a6raywa1cher.jsonrestsecurity.jwt.service.JwtTokenService
  */
+@SuppressWarnings("unused")
 public class JwtToken {
 	private String token;
 

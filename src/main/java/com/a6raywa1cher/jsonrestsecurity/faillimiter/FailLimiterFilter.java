@@ -32,6 +32,7 @@ public class FailLimiterFilter extends OncePerRequestFilter {
 	}
 
 	@Override
+	@SuppressWarnings("NullableProblems")
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 		String ip = request.getRemoteAddr();
 		if (service.isBlocked(ip)) {

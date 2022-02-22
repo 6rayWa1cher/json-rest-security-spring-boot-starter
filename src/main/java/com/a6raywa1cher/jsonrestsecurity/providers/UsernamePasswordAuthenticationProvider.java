@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collection;
-import java.util.Optional;
 
 /**
  * Authenticates the client with {@link UsernamePasswordAuthenticationToken}.
@@ -30,12 +29,13 @@ import java.util.Optional;
  *
  * @see com.a6raywa1cher.jsonrestsecurity.web.JsonRestWebSecurityConfigurer
  */
+@SuppressWarnings("ClassCanBeRecord")
 public class UsernamePasswordAuthenticationProvider implements AuthenticationProvider {
 	private final PasswordEncoder passwordEncoder;
-	private final UserService userService;
+	private final UserService<?> userService;
 	private final GrantedAuthorityService grantedAuthorityService;
 
-	public UsernamePasswordAuthenticationProvider(UserService userService, PasswordEncoder passwordEncoder,
+	public UsernamePasswordAuthenticationProvider(UserService<?> userService, PasswordEncoder passwordEncoder,
 												  GrantedAuthorityService grantedAuthorityService) {
 		this.userService = userService;
 		this.passwordEncoder = passwordEncoder;
@@ -49,21 +49,23 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
 			!(authentication.getCredentials() instanceof String inputPassword)) {
 			return null;
 		}
-		String principal = (String) token.getPrincipal();
-		Optional<IUser> byUsername = userService.getByLogin(principal);
-		if (byUsername.isEmpty()) {
-			throw new UsernameNotFoundException("User not exists or incorrect password");
+		try {
+			String principal = (String) token.getPrincipal();
+			IUser user = userService.getByLogin(principal)
+				.orElseThrow(() -> new UsernameNotFoundException("User not exists or incorrect password"));
+			if (user.getPassword() == null || "".equals(user.getPassword())) {
+				throw new DisabledException("User didn't set up password");
+			}
+			if (!passwordEncoder.matches(inputPassword, user.getPassword())) {
+				throw new BadCredentialsException("User not exists or incorrect password");
+			}
+			Collection<GrantedAuthority> authorities = grantedAuthorityService.getAuthorities(user);
+			return new UsernamePasswordAuthenticationToken(
+				user.getId(), token, authorities);
+		} catch (Exception e) {
+			authentication.setAuthenticated(false);
+			throw e;
 		}
-		IUser user = byUsername.get();
-		if (user.getPassword() == null || "".equals(user.getPassword())) {
-			throw new DisabledException("User didn't set up password");
-		}
-		if (!passwordEncoder.matches(inputPassword, user.getPassword())) {
-			throw new BadCredentialsException("User not exists or incorrect password");
-		}
-		Collection<GrantedAuthority> authorities = grantedAuthorityService.getAuthorities(user);
-		return new UsernamePasswordAuthenticationToken(
-			user.getId(), token, authorities);
 	}
 
 	@Override

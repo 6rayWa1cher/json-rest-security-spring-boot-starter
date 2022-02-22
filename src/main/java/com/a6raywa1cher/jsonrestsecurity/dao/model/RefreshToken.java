@@ -54,6 +54,7 @@ public class RefreshToken implements Cloneable {
 		return expiringAt;
 	}
 
+	@SuppressWarnings("unused")
 	public void setExpiringAt(LocalDateTime expiringAt) {
 		this.expiringAt = expiringAt;
 	}

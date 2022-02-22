@@ -17,6 +17,7 @@ import java.util.Set;
  * @see UserEnabledChecker
  * @see SecurityComponentsConfiguration
  */
+@SuppressWarnings("ClassCanBeRecord")
 public class GrantedAuthorityServiceImpl implements GrantedAuthorityService {
 	private final UserEnabledChecker userEnabledChecker;
 

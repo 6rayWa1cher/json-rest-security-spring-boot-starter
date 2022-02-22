@@ -22,6 +22,7 @@ public class LoadingCacheBlockedRefreshTokensService implements BlockedRefreshTo
 			.expireAfterWrite(duration)
 			.build(new CacheLoader<>() {
 				@Override
+				@SuppressWarnings("NullableProblems")
 				public String load(String key) {
 					return key;
 				}

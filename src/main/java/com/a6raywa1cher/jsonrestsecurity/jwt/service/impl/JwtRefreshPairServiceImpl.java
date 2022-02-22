@@ -15,6 +15,7 @@ import java.time.OffsetDateTime;
  *
  * @see com.a6raywa1cher.jsonrestsecurity.jwt.JwtAuthConfiguration
  */
+@SuppressWarnings("ClassCanBeRecord")
 public class JwtRefreshPairServiceImpl implements JwtRefreshPairService {
 	private final RefreshTokenService refreshTokenService;
 

@@ -15,7 +15,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Collection;
-import java.util.Optional;
 
 /**
  * Authenticates the client with {@link JwtAuthentication}.
@@ -31,12 +30,13 @@ import java.util.Optional;
  *
  * @see com.a6raywa1cher.jsonrestsecurity.web.JsonRestWebSecurityConfigurer
  */
+@SuppressWarnings("ClassCanBeRecord")
 public class JwtAuthenticationProvider implements AuthenticationProvider {
-	private final UserService userService;
+	private final UserService<?> userService;
 	private final BlockedRefreshTokensService blockedTokensService;
 	private final GrantedAuthorityService grantedAuthorityService;
 
-	public JwtAuthenticationProvider(UserService userService, BlockedRefreshTokensService blockedTokensService,
+	public JwtAuthenticationProvider(UserService<?> userService, BlockedRefreshTokensService blockedTokensService,
 									 GrantedAuthorityService grantedAuthorityService) {
 		this.userService = userService;
 		this.blockedTokensService = blockedTokensService;
@@ -48,24 +48,24 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 		if (!supports(authentication.getClass())) {
 			return null;
 		}
-		JwtAuthentication customAuthentication = (JwtAuthentication) authentication;
-		JwtToken jwtToken = customAuthentication.getCredentials();
-		if (jwtToken == null) {
-			customAuthentication.setAuthenticated(false);
-			throw new BadCredentialsException("JwtToken not provided");
+		try {
+			JwtAuthentication customAuthentication = (JwtAuthentication) authentication;
+			JwtToken jwtToken = customAuthentication.getCredentials();
+			if (jwtToken == null) {
+				throw new BadCredentialsException("JwtToken not provided");
+			}
+			if (!blockedTokensService.isValid(jwtToken.getRefreshId())) {
+				throw new CredentialsExpiredException("Refresh-token was revoked");
+			}
+			Long userId = jwtToken.getUid();
+			IUser user = userService.getById(userId)
+				.orElseThrow(() -> new UsernameNotFoundException(String.format("User %d doesn't exists", userId)));
+			Collection<GrantedAuthority> authorities = grantedAuthorityService.getAuthorities(user);
+			return new JwtAuthentication(authorities, jwtToken);
+		} catch (Exception e) {
+			authentication.setAuthenticated(false);
+			throw e;
 		}
-		if (!blockedTokensService.isValid(jwtToken.getRefreshId())) {
-			throw new CredentialsExpiredException("Refresh-token was revoked");
-		}
-		Long userId = jwtToken.getUid();
-		Optional<IUser> byId = userService.getById(userId);
-		if (byId.isEmpty()) {
-			customAuthentication.setAuthenticated(false);
-			throw new UsernameNotFoundException(String.format("User %d doesn't exists", userId));
-		}
-		IUser user = byId.get();
-		Collection<GrantedAuthority> authorities = grantedAuthorityService.getAuthorities(user);
-		return new JwtAuthentication(authorities, jwtToken);
 	}
 
 	@Override

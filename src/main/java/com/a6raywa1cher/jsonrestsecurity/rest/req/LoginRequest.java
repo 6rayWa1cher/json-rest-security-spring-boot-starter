@@ -12,9 +12,11 @@ public class LoginRequest {
 	@Size(min = 3, max = 128)
 	private String password;
 
+	@SuppressWarnings("unused")
 	public LoginRequest() {
 	}
 
+	@SuppressWarnings("unused")
 	public LoginRequest(String username, String password) {
 		this.username = username;
 		this.password = password;
