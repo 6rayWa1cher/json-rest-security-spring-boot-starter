@@ -20,9 +20,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * @see SecurityComponentsConfiguration
  */
 public class AuthenticationResolverImpl implements AuthenticationResolver {
-	private final UserService userService;
+	private final UserService<?> userService;
 
-	public AuthenticationResolverImpl(UserService userService) {
+	public AuthenticationResolverImpl(UserService<?> userService) {
 		this.userService = userService;
 	}
 

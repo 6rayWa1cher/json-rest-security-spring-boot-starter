@@ -7,15 +7,15 @@ import java.util.Optional;
 /**
  * Provides methods to find and update users
  *
- * @see DefaultUserService
+ * @see AbstractUserService
  */
-public interface UserService {
+public interface UserService<T extends IUser> {
 	/**
 	 * Updates last visit timestamp to the current time.
 	 *
 	 * @param user the input user
 	 */
-	void updateLastVisitAt(IUser user);
+	void updateLastVisitAt(T user);
 
 	/**
 	 * Retracts a user by id
@@ -23,7 +23,7 @@ public interface UserService {
 	 * @param id user id
 	 * @return user or empty optional
 	 */
-	Optional<IUser> getById(Long id);
+	Optional<T> getById(Long id);
 
 	/**
 	 * Retracts a user by login
@@ -31,7 +31,7 @@ public interface UserService {
 	 * @param login user login
 	 * @return user or empty optional
 	 */
-	Optional<IUser> getByLogin(String login);
+	Optional<T> getByLogin(String login);
 
 	/**
 	 * Retracts a user by login and raw password
@@ -40,5 +40,15 @@ public interface UserService {
 	 * @param rawPassword user raw password
 	 * @return user or empty optional
 	 */
-	Optional<IUser> getByLoginAndPassword(String login, String rawPassword);
+	Optional<T> getByLoginAndPassword(String login, String rawPassword);
+
+	/**
+	 * Creates a new user and save it
+	 *
+	 * @param login       user login
+	 * @param rawPassword user raw password
+	 * @param role        user role
+	 * @return new and saved user
+	 */
+	T create(String login, String rawPassword, String role);
 }

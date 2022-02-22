@@ -1,5 +1,6 @@
 package com.a6raywa1cher.jsonrestsecurity.dao;
 
+import com.a6raywa1cher.jsonrestsecurity.dao.model.DefaultUser;
 import com.a6raywa1cher.jsonrestsecurity.dao.repo.DefaultRefreshTokenRepository;
 import com.a6raywa1cher.jsonrestsecurity.dao.repo.DefaultUserRepository;
 import com.a6raywa1cher.jsonrestsecurity.dao.repo.IUserRepository;
@@ -30,8 +31,7 @@ public class DaoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean(IUserRepository.class)
-	@SuppressWarnings("rawtypes")
-	public IUserRepository defaultUserRepository() {
+	public IUserRepository<DefaultUser> defaultUserRepository() {
 		if (applicationContext.getBeansOfType(IUserRepository.class).isEmpty()) {
 			log.warn("\n\n\nUsing default UserRepository implementation will cause wipe of users after an application restart!\nCreate your own implementation of IUserRepository or create subinterface\n\n\n");
 			return new DefaultUserRepository();
@@ -42,15 +42,13 @@ public class DaoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean(RefreshTokenRepository.class)
-	@SuppressWarnings("rawtypes")
-	public RefreshTokenRepository refreshTokenRepository(IUserRepository userRepository) {
+	public RefreshTokenRepository refreshTokenRepository(IUserRepository<?> userRepository) {
 		return new DefaultRefreshTokenRepository(userRepository);
 	}
 
 	@Bean
 	@ConditionalOnMissingBean(UserService.class)
-	@SuppressWarnings("rawtypes")
-	public UserService userService(IUserRepository userRepository, PasswordEncoder passwordEncoder) {
+	public UserService<DefaultUser> userService(IUserRepository<DefaultUser> userRepository, PasswordEncoder passwordEncoder) {
 		return new DefaultUserService(userRepository, passwordEncoder);
 	}
 }

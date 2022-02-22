@@ -27,9 +27,14 @@ Add the dependency to your pom.xml
 </dependency>
 ```
 
-## Docs
+## Getting started
 
-### Creating user and user repository
+### No-Setup
+
+If you want to try and test the starter, just start your application and read "Access-Refresh authorization flow".  
+However, it isn't a recommended approach.
+
+### Full setup
 
 You can create a user class in two different ways:
 
@@ -57,10 +62,31 @@ public interface UserRepository extends IUserRepository<User>, CrudRepository<Us
 }
 ```
 
+And finally create UserServiceImpl with the `AbstractUserService` superclass:
+
+```java
+
+@Component
+public class UserServiceImpl extends AbstractUserService<User> {
+   public UserServiceImpl(IUserRepository<User> userRepository, PasswordEncoder passwordEncoder) {
+      super(userRepository, passwordEncoder);
+   }
+
+   @Override
+   public User create(String login, String rawPassword, String role) {
+      User user = new User();
+      user.setUsername(login);
+      user.setPassword(passwordEncoder.encode(rawPassword));
+      user.setUserRole(role);
+      return userRepository.save(user);
+   }
+}
+```
+
 `RefreshToken` isn't an Entity in terms of JPA. By default, refresh tokens are stored as a JSON array field in the user
 class. You can, however, extend the class and change it.
 
-Optionally, implement `UserService` or extend `DefaultUserService`.
+## Docs
 
 ### Extending SecurityConfig (WebSecurityConfigurerAdapter)
 
@@ -89,6 +115,14 @@ public class SecurityConfig extends JsonRestWebSecurityConfigurer {
    `void configure(AuthenticationManagerBuilder auth)`. Check out the
    implementation [here](https://github.com/6rayWa1cher/json-rest-security-spring-boot-starter/blob/master/src/main/java/com/a6raywa1cher/jsonrestsecurity/web/JsonRestWebSecurityConfigurer.java)
    .
+
+### Basic authorization flow
+
+Provide a header with the access token with every request:
+
+```
+Authorization: Basic YWJjZGVmOnF3ZXJ0eQ==
+```
 
 ### Access-Refresh authorization flow
 
