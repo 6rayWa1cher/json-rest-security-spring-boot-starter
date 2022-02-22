@@ -69,8 +69,23 @@ public class JsonRestWebSecurityConfigurer extends WebSecurityConfigurerAdapter 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) {
 		auth
-			.authenticationProvider(new JwtAuthenticationProvider(userService, blockedRefreshTokensService, grantedAuthorityService))
-			.authenticationProvider(new UsernamePasswordAuthenticationProvider(userService, passwordEncoder, grantedAuthorityService));
+			.authenticationProvider(getJwtAuthenticationProvider())
+			.authenticationProvider(getUsernamePasswordAuthenticationProvider());
+	}
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		configureJsonRest(http);
+		configureAuthorizeRequests(http);
+		configureHttpAuth(http);
+	}
+
+	private UsernamePasswordAuthenticationProvider getUsernamePasswordAuthenticationProvider() {
+		return new UsernamePasswordAuthenticationProvider(userService, passwordEncoder, grantedAuthorityService);
+	}
+
+	protected JwtAuthenticationProvider getJwtAuthenticationProvider() {
+		return new JwtAuthenticationProvider(userService, blockedRefreshTokensService, grantedAuthorityService);
 	}
 
 	protected void configureJsonRest(HttpSecurity http) throws Exception {
@@ -105,13 +120,6 @@ public class JsonRestWebSecurityConfigurer extends WebSecurityConfigurerAdapter 
 		if (useAnyMatcher) {
 			http.authorizeRequests().anyRequest().access("hasRole('USER') && hasAuthority('ENABLED')");
 		}
-	}
-
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		configureJsonRest(http);
-		configureAuthorizeRequests(http);
-		configureHttpAuth(http);
 	}
 
 	public void setUseAnyMatcher(boolean useAnyMatcher) {

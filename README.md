@@ -62,6 +62,34 @@ class. You can, however, extend the class and change it.
 
 Optionally, implement `UserService` or extend `DefaultUserService`.
 
+### Extending SecurityConfig (WebSecurityConfigurerAdapter)
+
+The simplest way to modify your Spring Security configuration is to extend the `JsonRestWebSecurityConfigurer` class. An
+example:
+
+```java
+
+@Configuration
+public class SecurityConfig extends JsonRestWebSecurityConfigurer {
+   @Override
+   protected void configure(HttpSecurity http) throws Exception {
+      http.authorizeRequests()
+              .antMatchers("/home/admin").hasAnyRole("ADMIN");
+
+      super.configure(http);
+   }
+}
+```
+
+`JsonRestWebSecurityConfigurer` has a couple of options to mention:
+
+1. To prevent the usage of `.anyMatcher()`, use `setUseAnyMatcher(false)`
+2. If you need to customize `JsonRestWebSecurityConfigurer` in a special way, you can
+   override `void configure(HttpSecurity http)` and
+   `void configure(AuthenticationManagerBuilder auth)`. Check out the
+   implementation [here](https://github.com/6rayWa1cher/json-rest-security-spring-boot-starter/blob/master/src/main/java/com/a6raywa1cher/jsonrestsecurity/web/JsonRestWebSecurityConfigurer.java)
+   .
+
 ### Access-Refresh authorization flow
 
 1. The User sends a request to `POST /auth/login` with body:
