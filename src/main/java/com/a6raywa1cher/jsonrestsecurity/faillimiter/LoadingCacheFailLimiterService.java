@@ -40,7 +40,7 @@ public class LoadingCacheFailLimiterService implements FailLimiterService {
 			.softValues()
 			.maximumSize(maxSize)
 			.removalListener((n) -> {
-				if (n.getCause() == RemovalCause.EXPIRED) {
+				if (n.getCause() == RemovalCause.EXPIRED && (int) n.getValue() >= maxAttempts) {
 					log.info("Unblocked user " + n.getKey());
 				}
 			})

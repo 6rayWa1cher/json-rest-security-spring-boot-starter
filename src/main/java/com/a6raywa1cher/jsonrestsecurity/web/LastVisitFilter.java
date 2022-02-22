@@ -32,7 +32,8 @@ public class LastVisitFilter<T extends IUser> extends OncePerRequestFilter {
 			try {
 				if (SecurityContextHolder.getContext().getAuthentication() != null) {
 					T user = (T) resolver.getUser();
-					if (user.getLastVisitAt().plusSeconds(30).isBefore(LocalDateTime.now())) {
+					LocalDateTime lastVisit = user.getLastVisitAt();
+					if (lastVisit == null || user.getLastVisitAt().plusSeconds(30).isBefore(LocalDateTime.now())) {
 						userService.updateLastVisitAt(user);
 					}
 				}

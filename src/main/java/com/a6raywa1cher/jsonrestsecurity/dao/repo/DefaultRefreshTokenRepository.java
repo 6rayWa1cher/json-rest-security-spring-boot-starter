@@ -24,7 +24,8 @@ public class DefaultRefreshTokenRepository<T extends IUser> implements RefreshTo
 
 	@Override
 	public List<RefreshToken> findAllByUser(IUser user) {
-		return user.getRefreshTokens();
+		List<RefreshToken> tokenList = user.getRefreshTokens();
+		return tokenList == null ? new ArrayList<>() : new ArrayList<>(tokenList);
 	}
 
 	@Override
@@ -32,7 +33,7 @@ public class DefaultRefreshTokenRepository<T extends IUser> implements RefreshTo
 		List<String> idsToDelete = listToDelete.stream()
 			.map(RefreshToken::getId)
 			.toList();
-		List<RefreshToken> refreshTokens = new ArrayList<>(user.getRefreshTokens());
+		List<RefreshToken> refreshTokens = findAllByUser(user);
 		refreshTokens.removeIf(rt -> idsToDelete.contains(rt.getId()));
 		user.setRefreshTokens(refreshTokens);
 		userRepository.save((T) user);
@@ -40,7 +41,7 @@ public class DefaultRefreshTokenRepository<T extends IUser> implements RefreshTo
 
 	@Override
 	public RefreshToken save(IUser user, RefreshToken refreshToken) {
-		List<RefreshToken> refreshTokens = new ArrayList<>(user.getRefreshTokens());
+		List<RefreshToken> refreshTokens = findAllByUser(user);
 		refreshTokens.removeIf(rt -> rt.getId().equals(refreshToken.getId()));
 		refreshTokens.add(refreshToken);
 		user.setRefreshTokens(refreshTokens);
@@ -50,7 +51,7 @@ public class DefaultRefreshTokenRepository<T extends IUser> implements RefreshTo
 
 	@Override
 	public Optional<RefreshToken> findByToken(IUser user, String token) {
-		List<RefreshToken> refreshTokens = new ArrayList<>(user.getRefreshTokens());
+		List<RefreshToken> refreshTokens = findAllByUser(user);
 		return refreshTokens.stream()
 			.filter(rt -> rt.getToken().equals(token))
 			.findFirst();
@@ -58,7 +59,7 @@ public class DefaultRefreshTokenRepository<T extends IUser> implements RefreshTo
 
 	@Override
 	public void delete(IUser user, RefreshToken refreshToken) {
-		List<RefreshToken> refreshTokens = new ArrayList<>(user.getRefreshTokens());
+		List<RefreshToken> refreshTokens = findAllByUser(user);
 		refreshTokens.removeIf(rt -> rt.getId().equals(refreshToken.getId()));
 		user.setRefreshTokens(refreshTokens);
 		userRepository.save((T) user);

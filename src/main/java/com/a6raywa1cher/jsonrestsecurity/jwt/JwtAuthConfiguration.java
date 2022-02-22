@@ -64,7 +64,7 @@ public class JwtAuthConfiguration {
 	public JwtTokenService jwtTokenService() {
 		String secret = properties.getSecret();
 		if (Objects.equals(secret, "generate")) {
-			log.warn("\n\n\nUsing auto-generated JWT secret will cause every token to become invalid after an application restart!\nSet web-security.jwt.secret property (for example, visit this website: https://www.grc.com/passwords.htm )\n\n\n");
+			log.warn("\n\n\nUsing auto-generated JWT secret will cause every token to become invalid after an application restart!\nSet json-rest-security.jwt.secret property (for example, visit this website: https://www.grc.com/passwords.htm )\n\n\n");
 			secret = StringUtils.randomString(128);
 		}
 		return new JwtTokenServiceImpl(
