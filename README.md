@@ -23,7 +23,7 @@ Add the dependency to your pom.xml
 <dependency>
    <groupId>com.a6raywa1cher</groupId>
    <artifactId>json-rest-security-spring-boot-starter</artifactId>
-   <version>0.0.1</version>
+   <version>0.0.2</version>
 </dependency>
 ```
 
