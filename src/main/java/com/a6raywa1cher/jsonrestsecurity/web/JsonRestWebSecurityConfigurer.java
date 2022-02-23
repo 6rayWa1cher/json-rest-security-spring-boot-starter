@@ -103,7 +103,7 @@ public class JsonRestWebSecurityConfigurer extends WebSecurityConfigurerAdapter 
 		http.formLogin();
 		http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenService, authenticationManagerBean(), authenticationEntryPoint), UsernamePasswordAuthenticationFilter.class);
 		http.addFilterAfter(new LastVisitFilter<>(IUserService, authenticationResolver), SecurityContextHolderAwareRequestFilter.class);
-		http.addFilterBefore(failLimiterFilter, JwtAuthenticationFilter.class);
+		if (failLimiterFilter != null) http.addFilterBefore(failLimiterFilter, JwtAuthenticationFilter.class);
 	}
 
 	protected void configureAuthorizeRequests(HttpSecurity http) throws Exception {
@@ -169,7 +169,7 @@ public class JsonRestWebSecurityConfigurer extends WebSecurityConfigurerAdapter 
 	}
 
 	@Autowired(required = false)
-	public void setCriticalActionLimiterFilter(FailLimiterFilter failLimiterFilter) {
+	public void setFailLimiterFilter(FailLimiterFilter failLimiterFilter) {
 		this.failLimiterFilter = failLimiterFilter;
 	}
 }
