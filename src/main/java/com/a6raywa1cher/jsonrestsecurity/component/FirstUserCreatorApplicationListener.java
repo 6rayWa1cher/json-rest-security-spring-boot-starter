@@ -15,20 +15,20 @@ public class FirstUserCreatorApplicationListener implements ApplicationListener<
 
 	private final String role;
 
-	private final IUserService<?> IUserService;
+	private final IUserService<?> iUserService;
 
-	public FirstUserCreatorApplicationListener(String username, String password, String role, IUserService<?> IUserService) {
+	public FirstUserCreatorApplicationListener(String username, String password, String role, IUserService<?> iUserService) {
 		this.username = username;
 		this.password = password;
 		this.role = role;
-		this.IUserService = IUserService;
+		this.iUserService = iUserService;
 	}
 
 	@Override
 	@Transactional
 	public void onApplicationEvent(ApplicationReadyEvent event) {
-		if (IUserService.getByLogin(username).isEmpty()) {
-			IUserService.create(username, password, role);
+		if (iUserService.getByLogin(username).isEmpty()) {
+			iUserService.create(username, password, role);
 			log.info("Created first-user");
 		}
 	}

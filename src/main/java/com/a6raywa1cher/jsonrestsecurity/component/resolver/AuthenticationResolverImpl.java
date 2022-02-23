@@ -21,10 +21,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 @SuppressWarnings("ClassCanBeRecord")
 public class AuthenticationResolverImpl implements AuthenticationResolver {
-	private final IUserService<?> IUserService;
+	private final IUserService<?> iUserService;
 
-	public AuthenticationResolverImpl(IUserService<?> IUserService) {
-		this.IUserService = IUserService;
+	public AuthenticationResolverImpl(IUserService<?> iUserService) {
+		this.iUserService = iUserService;
 	}
 
 	/**
@@ -47,9 +47,9 @@ public class AuthenticationResolverImpl implements AuthenticationResolver {
 			throw new BadCredentialsException("No credentials presented");
 		}
 		if (authentication instanceof JwtAuthentication jwtAuthentication) {
-			return IUserService.getById(jwtAuthentication.getPrincipal()).orElseThrow();
+			return iUserService.getById(jwtAuthentication.getPrincipal()).orElseThrow();
 		} else if (authentication instanceof UsernamePasswordAuthenticationToken token) {
-			return IUserService.getById((Long) token.getPrincipal()).orElseThrow();
+			return iUserService.getById((Long) token.getPrincipal()).orElseThrow();
 		}
 		throw new AuthenticationResolveException("Unknown Authentication " + authentication.getClass().getCanonicalName());
 	}

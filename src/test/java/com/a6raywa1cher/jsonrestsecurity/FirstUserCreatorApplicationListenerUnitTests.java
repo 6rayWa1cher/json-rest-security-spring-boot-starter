@@ -20,29 +20,29 @@ public class FirstUserCreatorApplicationListenerUnitTests {
 	final String PASSWORD = randomString(10);
 	final String ROLE = randomString(10);
 	@Mock
-	IUserService<IUser> IUserService;
+	IUserService<IUser> iUserService;
 
 	@Test
 	void onApplicationEvent__userNotExists() {
-		FirstUserCreatorApplicationListener listener = new FirstUserCreatorApplicationListener(USERNAME, PASSWORD, ROLE, IUserService);
+		FirstUserCreatorApplicationListener listener = new FirstUserCreatorApplicationListener(USERNAME, PASSWORD, ROLE, iUserService);
 
-		when(IUserService.getByLogin(USERNAME)).thenReturn(Optional.empty());
+		when(iUserService.getByLogin(USERNAME)).thenReturn(Optional.empty());
 
 		listener.onApplicationEvent(mock(ApplicationReadyEvent.class));
 
-		verify(IUserService).getByLogin(USERNAME);
-		verify(IUserService).create(USERNAME, PASSWORD, ROLE);
+		verify(iUserService).getByLogin(USERNAME);
+		verify(iUserService).create(USERNAME, PASSWORD, ROLE);
 	}
 
 	@Test
 	void onApplicationEvent__userExists() {
-		FirstUserCreatorApplicationListener listener = new FirstUserCreatorApplicationListener(USERNAME, PASSWORD, ROLE, IUserService);
+		FirstUserCreatorApplicationListener listener = new FirstUserCreatorApplicationListener(USERNAME, PASSWORD, ROLE, iUserService);
 
-		when(IUserService.getByLogin(USERNAME)).thenReturn(Optional.of(mock(IUser.class)));
+		when(iUserService.getByLogin(USERNAME)).thenReturn(Optional.of(mock(IUser.class)));
 
 		listener.onApplicationEvent(mock(ApplicationReadyEvent.class));
 
-		verify(IUserService).getByLogin(USERNAME);
-		verify(IUserService, never()).create(USERNAME, PASSWORD, ROLE);
+		verify(iUserService).getByLogin(USERNAME);
+		verify(iUserService, never()).create(USERNAME, PASSWORD, ROLE);
 	}
 }

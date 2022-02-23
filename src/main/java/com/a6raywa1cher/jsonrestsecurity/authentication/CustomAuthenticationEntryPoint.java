@@ -5,6 +5,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +30,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
 		if (authException instanceof BadCredentialsException ||
 			authException instanceof CredentialsExpiredException ||
+			authException instanceof UsernameNotFoundException ||
 			(
 				authException instanceof InsufficientAuthenticationException &&
 					Objects.equals(authException.getMessage(), "Full authentication is required to access this resource")

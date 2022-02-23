@@ -32,13 +32,13 @@ import java.util.Collection;
  */
 @SuppressWarnings("ClassCanBeRecord")
 public class JwtAuthenticationProvider implements AuthenticationProvider {
-	private final IUserService<?> IUserService;
+	private final IUserService<?> iUserService;
 	private final BlockedRefreshTokensService blockedTokensService;
 	private final GrantedAuthorityService grantedAuthorityService;
 
-	public JwtAuthenticationProvider(IUserService<?> IUserService, BlockedRefreshTokensService blockedTokensService,
+	public JwtAuthenticationProvider(IUserService<?> iUserService, BlockedRefreshTokensService blockedTokensService,
 									 GrantedAuthorityService grantedAuthorityService) {
-		this.IUserService = IUserService;
+		this.iUserService = iUserService;
 		this.blockedTokensService = blockedTokensService;
 		this.grantedAuthorityService = grantedAuthorityService;
 	}
@@ -58,7 +58,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 				throw new CredentialsExpiredException("Refresh-token was revoked");
 			}
 			Long userId = jwtToken.getUid();
-			IUser user = IUserService.getById(userId)
+			IUser user = iUserService.getById(userId)
 				.orElseThrow(() -> new UsernameNotFoundException(String.format("User %d doesn't exists", userId)));
 			Collection<GrantedAuthority> authorities = grantedAuthorityService.getAuthorities(user);
 			return new JwtAuthentication(authorities, jwtToken);

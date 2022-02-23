@@ -32,12 +32,12 @@ import java.util.Collection;
 @SuppressWarnings("ClassCanBeRecord")
 public class UsernamePasswordAuthenticationProvider implements AuthenticationProvider {
 	private final PasswordEncoder passwordEncoder;
-	private final IUserService<?> IUserService;
+	private final IUserService<?> iUserService;
 	private final GrantedAuthorityService grantedAuthorityService;
 
-	public UsernamePasswordAuthenticationProvider(IUserService<?> IUserService, PasswordEncoder passwordEncoder,
+	public UsernamePasswordAuthenticationProvider(IUserService<?> iUserService, PasswordEncoder passwordEncoder,
 												  GrantedAuthorityService grantedAuthorityService) {
-		this.IUserService = IUserService;
+		this.iUserService = iUserService;
 		this.passwordEncoder = passwordEncoder;
 		this.grantedAuthorityService = grantedAuthorityService;
 	}
@@ -51,7 +51,7 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
 		}
 		try {
 			String principal = (String) token.getPrincipal();
-			IUser user = IUserService.getByLogin(principal)
+			IUser user = iUserService.getByLogin(principal)
 				.orElseThrow(() -> new UsernameNotFoundException("User not exists or incorrect password"));
 			if (user.getPassword() == null || "".equals(user.getPassword())) {
 				throw new DisabledException("User didn't set up password");

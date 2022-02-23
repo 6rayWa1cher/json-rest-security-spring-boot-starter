@@ -47,7 +47,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 })
 @SuppressWarnings("SpringFacetCodeInspection")
 public class JsonRestWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
-	private IUserService<?> IUserService;
+	private IUserService<?> iUserService;
 
 	private JwtTokenService jwtTokenService;
 
@@ -82,11 +82,11 @@ public class JsonRestWebSecurityConfigurer extends WebSecurityConfigurerAdapter 
 	}
 
 	private UsernamePasswordAuthenticationProvider getUsernamePasswordAuthenticationProvider() {
-		return new UsernamePasswordAuthenticationProvider(IUserService, passwordEncoder, grantedAuthorityService);
+		return new UsernamePasswordAuthenticationProvider(iUserService, passwordEncoder, grantedAuthorityService);
 	}
 
 	protected JwtAuthenticationProvider getJwtAuthenticationProvider() {
-		return new JwtAuthenticationProvider(IUserService, blockedRefreshTokensService, grantedAuthorityService);
+		return new JwtAuthenticationProvider(iUserService, blockedRefreshTokensService, grantedAuthorityService);
 	}
 
 	protected void configureJsonRest(HttpSecurity http) throws Exception {
@@ -102,7 +102,7 @@ public class JsonRestWebSecurityConfigurer extends WebSecurityConfigurerAdapter 
 			.authenticationEntryPoint(authenticationEntryPoint);
 		http.formLogin();
 		http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenService, authenticationManagerBean(), authenticationEntryPoint), UsernamePasswordAuthenticationFilter.class);
-		http.addFilterAfter(new LastVisitFilter<>(IUserService, authenticationResolver), SecurityContextHolderAwareRequestFilter.class);
+		http.addFilterAfter(new LastVisitFilter<>(iUserService, authenticationResolver), SecurityContextHolderAwareRequestFilter.class);
 		if (failLimiterFilter != null) http.addFilterBefore(failLimiterFilter, JwtAuthenticationFilter.class);
 	}
 
@@ -129,8 +129,8 @@ public class JsonRestWebSecurityConfigurer extends WebSecurityConfigurerAdapter 
 	}
 
 	@Autowired
-	public void setUserService(IUserService<?> IUserService) {
-		this.IUserService = IUserService;
+	public void setUserService(IUserService<?> iUserService) {
+		this.iUserService = iUserService;
 	}
 
 	@Autowired

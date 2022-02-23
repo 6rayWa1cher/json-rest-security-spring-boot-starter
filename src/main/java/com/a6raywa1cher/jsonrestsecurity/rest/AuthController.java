@@ -31,14 +31,14 @@ public class AuthController {
 
 	private final JwtRefreshPairService jwtRefreshPairService;
 
-	private final IUserService<?> IUserService;
+	private final IUserService<?> iUserService;
 
 	public AuthController(AuthenticationResolver authenticationResolver, RefreshTokenService refreshTokenService,
-						  JwtRefreshPairService jwtRefreshPairService, IUserService<?> IUserService) {
+						  JwtRefreshPairService jwtRefreshPairService, IUserService<?> iUserService) {
 		this.authenticationResolver = authenticationResolver;
 		this.refreshTokenService = refreshTokenService;
 		this.jwtRefreshPairService = jwtRefreshPairService;
-		this.IUserService = IUserService;
+		this.iUserService = iUserService;
 	}
 
 	@GetMapping("/check")
@@ -56,7 +56,7 @@ public class AuthController {
 	@SecurityRequirements // erase jwt login
 	public ResponseEntity<JwtRefreshPair> convertToJwt(@RequestBody @Valid LoginRequest loginRequest,
 													   HttpServletRequest request) {
-		Optional<?> optional = IUserService.getByLoginAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
+		Optional<?> optional = iUserService.getByLoginAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
 		if (optional.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
@@ -70,7 +70,7 @@ public class AuthController {
 	@PostMapping("/get_access")
 	@SecurityRequirements // erase jwt login
 	public ResponseEntity<JwtRefreshPair> getNewJwtToken(@RequestBody @Valid GetNewJwtTokenRequest request) {
-		Optional<IUser> user = IUserService.getById(request.getUserId()).map(u -> (IUser) u);
+		Optional<IUser> user = iUserService.getById(request.getUserId()).map(u -> (IUser) u);
 		Optional<RefreshToken> optional = user.flatMap(
 			u -> refreshTokenService.getByToken(u, request.getRefreshToken())
 		);
@@ -83,7 +83,7 @@ public class AuthController {
 
 	@DeleteMapping("/invalidate")
 	public ResponseEntity<Void> invalidateToken(@RequestBody @Valid InvalidateTokenRequest request) {
-		Optional<IUser> user = IUserService.getById(request.getUserId()).map(u -> (IUser) u);
+		Optional<IUser> user = iUserService.getById(request.getUserId()).map(u -> (IUser) u);
 		Optional<RefreshToken> optional = user.flatMap(u -> refreshTokenService.getByToken(u, request.getRefreshToken()));
 		optional.ifPresent(refreshToken -> refreshTokenService.invalidate(user.get(), refreshToken));
 		return ResponseEntity.ok().build();

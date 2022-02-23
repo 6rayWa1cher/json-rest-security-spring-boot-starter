@@ -16,11 +16,11 @@ import java.time.LocalDateTime;
 
 @SuppressWarnings({"unchecked", "NullableProblems"})
 public class LastVisitFilter<T extends IUser> extends OncePerRequestFilter {
-	private final IUserService<T> IUserService;
+	private final IUserService<T> iUserService;
 	private final AuthenticationResolver resolver;
 
-	public LastVisitFilter(IUserService<T> IUserService, AuthenticationResolver resolver) {
-		this.IUserService = IUserService;
+	public LastVisitFilter(IUserService<T> iUserService, AuthenticationResolver resolver) {
+		this.iUserService = iUserService;
 		this.resolver = resolver;
 	}
 
@@ -34,7 +34,7 @@ public class LastVisitFilter<T extends IUser> extends OncePerRequestFilter {
 					T user = (T) resolver.getUser();
 					LocalDateTime lastVisit = user.getLastVisitAt();
 					if (lastVisit == null || user.getLastVisitAt().plusSeconds(30).isBefore(LocalDateTime.now())) {
-						IUserService.updateLastVisitAt(user);
+						iUserService.updateLastVisitAt(user);
 					}
 				}
 			} catch (AuthenticationResolveException ignored) {
