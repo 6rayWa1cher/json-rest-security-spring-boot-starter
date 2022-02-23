@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.a6raywa1cher</groupId>
     <artifactId>json-rest-security-spring-boot-starter</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4-SNAPSHOT</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Security enclosure for JSON REST backends on Spring Boot WebMvc</description>

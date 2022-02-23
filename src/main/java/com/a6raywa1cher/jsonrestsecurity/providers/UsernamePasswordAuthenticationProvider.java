@@ -2,7 +2,7 @@ package com.a6raywa1cher.jsonrestsecurity.providers;
 
 import com.a6raywa1cher.jsonrestsecurity.component.authority.GrantedAuthorityService;
 import com.a6raywa1cher.jsonrestsecurity.dao.model.IUser;
-import com.a6raywa1cher.jsonrestsecurity.dao.service.UserService;
+import com.a6raywa1cher.jsonrestsecurity.dao.service.IUserService;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -32,12 +32,12 @@ import java.util.Collection;
 @SuppressWarnings("ClassCanBeRecord")
 public class UsernamePasswordAuthenticationProvider implements AuthenticationProvider {
 	private final PasswordEncoder passwordEncoder;
-	private final UserService<?> userService;
+	private final IUserService<?> IUserService;
 	private final GrantedAuthorityService grantedAuthorityService;
 
-	public UsernamePasswordAuthenticationProvider(UserService<?> userService, PasswordEncoder passwordEncoder,
+	public UsernamePasswordAuthenticationProvider(IUserService<?> IUserService, PasswordEncoder passwordEncoder,
 												  GrantedAuthorityService grantedAuthorityService) {
-		this.userService = userService;
+		this.IUserService = IUserService;
 		this.passwordEncoder = passwordEncoder;
 		this.grantedAuthorityService = grantedAuthorityService;
 	}
@@ -51,7 +51,7 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
 		}
 		try {
 			String principal = (String) token.getPrincipal();
-			IUser user = userService.getByLogin(principal)
+			IUser user = IUserService.getByLogin(principal)
 				.orElseThrow(() -> new UsernameNotFoundException("User not exists or incorrect password"));
 			if (user.getPassword() == null || "".equals(user.getPassword())) {
 				throw new DisabledException("User didn't set up password");

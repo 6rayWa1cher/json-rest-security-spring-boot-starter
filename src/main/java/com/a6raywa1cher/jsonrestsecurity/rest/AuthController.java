@@ -3,13 +3,14 @@ package com.a6raywa1cher.jsonrestsecurity.rest;
 import com.a6raywa1cher.jsonrestsecurity.component.resolver.AuthenticationResolver;
 import com.a6raywa1cher.jsonrestsecurity.dao.model.IUser;
 import com.a6raywa1cher.jsonrestsecurity.dao.model.RefreshToken;
-import com.a6raywa1cher.jsonrestsecurity.dao.service.UserService;
+import com.a6raywa1cher.jsonrestsecurity.dao.service.IUserService;
 import com.a6raywa1cher.jsonrestsecurity.jwt.JwtRefreshPair;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.JwtRefreshPairService;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.RefreshTokenService;
 import com.a6raywa1cher.jsonrestsecurity.rest.req.GetNewJwtTokenRequest;
 import com.a6raywa1cher.jsonrestsecurity.rest.req.InvalidateTokenRequest;
 import com.a6raywa1cher.jsonrestsecurity.rest.req.LoginRequest;
+import com.a6raywa1cher.jsonrestsecurity.rest.res.UserInfo;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,14 +31,14 @@ public class AuthController {
 
 	private final JwtRefreshPairService jwtRefreshPairService;
 
-	private final UserService<?> userService;
+	private final IUserService<?> IUserService;
 
 	public AuthController(AuthenticationResolver authenticationResolver, RefreshTokenService refreshTokenService,
-						  JwtRefreshPairService jwtRefreshPairService, UserService<?> userService) {
+						  JwtRefreshPairService jwtRefreshPairService, IUserService<?> IUserService) {
 		this.authenticationResolver = authenticationResolver;
 		this.refreshTokenService = refreshTokenService;
 		this.jwtRefreshPairService = jwtRefreshPairService;
-		this.userService = userService;
+		this.IUserService = IUserService;
 	}
 
 	@GetMapping("/check")
@@ -45,11 +46,17 @@ public class AuthController {
 		return ResponseEntity.ok().build();
 	}
 
+	@GetMapping("/user")
+	public ResponseEntity<UserInfo> getSelf() {
+		IUser user = authenticationResolver.getUser();
+		return ResponseEntity.ok(new UserInfo(user.getId(), user.getUsername()));
+	}
+
 	@PostMapping("/login")
 	@SecurityRequirements // erase jwt login
 	public ResponseEntity<JwtRefreshPair> convertToJwt(@RequestBody @Valid LoginRequest loginRequest,
 													   HttpServletRequest request) {
-		Optional<?> optional = userService.getByLoginAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
+		Optional<?> optional = IUserService.getByLoginAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
 		if (optional.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
@@ -63,7 +70,7 @@ public class AuthController {
 	@PostMapping("/get_access")
 	@SecurityRequirements // erase jwt login
 	public ResponseEntity<JwtRefreshPair> getNewJwtToken(@RequestBody @Valid GetNewJwtTokenRequest request) {
-		Optional<IUser> user = userService.getById(request.getUserId()).map(u -> (IUser) u);
+		Optional<IUser> user = IUserService.getById(request.getUserId()).map(u -> (IUser) u);
 		Optional<RefreshToken> optional = user.flatMap(
 			u -> refreshTokenService.getByToken(u, request.getRefreshToken())
 		);
@@ -76,7 +83,7 @@ public class AuthController {
 
 	@DeleteMapping("/invalidate")
 	public ResponseEntity<Void> invalidateToken(@RequestBody @Valid InvalidateTokenRequest request) {
-		Optional<IUser> user = userService.getById(request.getUserId()).map(u -> (IUser) u);
+		Optional<IUser> user = IUserService.getById(request.getUserId()).map(u -> (IUser) u);
 		Optional<RefreshToken> optional = user.flatMap(u -> refreshTokenService.getByToken(u, request.getRefreshToken()));
 		optional.ifPresent(refreshToken -> refreshTokenService.invalidate(user.get(), refreshToken));
 		return ResponseEntity.ok().build();

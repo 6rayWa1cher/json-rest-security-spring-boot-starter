@@ -124,6 +124,8 @@ Provide a header with the access token with every request:
 Authorization: Basic YWJjZGVmOnF3ZXJ0eQ==
 ```
 
+Use `GET /auth/user` to get the user's id and username.
+
 ### Access-Refresh authorization flow
 
 1. The User sends a request to `POST /auth/login` with body:
@@ -148,7 +150,14 @@ Authorization: Basic YWJjZGVmOnF3ZXJ0eQ==
     Authorization: Bearer eyJ0eXAiO...
     ```
 3. The user can check if accessToken is still works with `GET /auth/check`.
-4. If the accessToken is expired, request a new one with the refreshToken at `POST /auth/get_access` with body:
+4. Check `GET /auth/user` to get the user's id and username:
+   ```json
+   {
+      "id": 1,
+      "username": "abcdef"
+   }
+   ```
+6. If the accessToken is expired, request a new one with the refreshToken at `POST /auth/get_access` with body:
     ```json
     {
       "refreshToken": "8ce451bb-44cb-4fbd-9e9d-02ee3335e176",
@@ -156,14 +165,14 @@ Authorization: Basic YWJjZGVmOnF3ZXJ0eQ==
     }
     ```
    The user will get a new pair of tokens.
-4. The user can request `DELETE /auth/invalidate` to invalidate refresh token and associated access token with body:
+7. The user can request `DELETE /auth/invalidate` to invalidate refresh token and associated access token with body:
     ```json
     {
       "refreshToken": "8ce451bb-44cb-4fbd-9e9d-02ee3335e176",
       "userId": 1
     }
     ```
-5. If user want to make a full logout from all devices, use `DELETE /auth/invalidate_all`.
+8. If user want to make a full logout from all devices, use `DELETE /auth/invalidate_all`.
 
 AuthController is compatible with springdoc-openapi.
 

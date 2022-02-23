@@ -4,7 +4,7 @@ import com.a6raywa1cher.jsonrestsecurity.component.SecurityComponentsConfigurati
 import com.a6raywa1cher.jsonrestsecurity.component.authority.GrantedAuthorityService;
 import com.a6raywa1cher.jsonrestsecurity.component.resolver.AuthenticationResolver;
 import com.a6raywa1cher.jsonrestsecurity.dao.DaoConfiguration;
-import com.a6raywa1cher.jsonrestsecurity.dao.service.UserService;
+import com.a6raywa1cher.jsonrestsecurity.dao.service.IUserService;
 import com.a6raywa1cher.jsonrestsecurity.faillimiter.FailLimiterConfiguration;
 import com.a6raywa1cher.jsonrestsecurity.faillimiter.FailLimiterFilter;
 import com.a6raywa1cher.jsonrestsecurity.jwt.JwtAuthConfiguration;
@@ -47,7 +47,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 })
 @SuppressWarnings("SpringFacetCodeInspection")
 public class JsonRestWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
-	private UserService<?> userService;
+	private IUserService<?> IUserService;
 
 	private JwtTokenService jwtTokenService;
 
@@ -82,11 +82,11 @@ public class JsonRestWebSecurityConfigurer extends WebSecurityConfigurerAdapter 
 	}
 
 	private UsernamePasswordAuthenticationProvider getUsernamePasswordAuthenticationProvider() {
-		return new UsernamePasswordAuthenticationProvider(userService, passwordEncoder, grantedAuthorityService);
+		return new UsernamePasswordAuthenticationProvider(IUserService, passwordEncoder, grantedAuthorityService);
 	}
 
 	protected JwtAuthenticationProvider getJwtAuthenticationProvider() {
-		return new JwtAuthenticationProvider(userService, blockedRefreshTokensService, grantedAuthorityService);
+		return new JwtAuthenticationProvider(IUserService, blockedRefreshTokensService, grantedAuthorityService);
 	}
 
 	protected void configureJsonRest(HttpSecurity http) throws Exception {
@@ -102,7 +102,7 @@ public class JsonRestWebSecurityConfigurer extends WebSecurityConfigurerAdapter 
 			.authenticationEntryPoint(authenticationEntryPoint);
 		http.formLogin();
 		http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenService, authenticationManagerBean(), authenticationEntryPoint), UsernamePasswordAuthenticationFilter.class);
-		http.addFilterAfter(new LastVisitFilter<>(userService, authenticationResolver), SecurityContextHolderAwareRequestFilter.class);
+		http.addFilterAfter(new LastVisitFilter<>(IUserService, authenticationResolver), SecurityContextHolderAwareRequestFilter.class);
 		http.addFilterBefore(failLimiterFilter, JwtAuthenticationFilter.class);
 	}
 
@@ -129,8 +129,8 @@ public class JsonRestWebSecurityConfigurer extends WebSecurityConfigurerAdapter 
 	}
 
 	@Autowired
-	public void setUserService(UserService<?> userService) {
-		this.userService = userService;
+	public void setUserService(IUserService<?> IUserService) {
+		this.IUserService = IUserService;
 	}
 
 	@Autowired

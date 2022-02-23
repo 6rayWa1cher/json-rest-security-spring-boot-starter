@@ -7,7 +7,7 @@ import com.a6raywa1cher.jsonrestsecurity.component.checker.DefaultUserEnabledChe
 import com.a6raywa1cher.jsonrestsecurity.component.checker.UserEnabledChecker;
 import com.a6raywa1cher.jsonrestsecurity.component.resolver.AuthenticationResolver;
 import com.a6raywa1cher.jsonrestsecurity.component.resolver.AuthenticationResolverImpl;
-import com.a6raywa1cher.jsonrestsecurity.dao.service.UserService;
+import com.a6raywa1cher.jsonrestsecurity.dao.service.IUserService;
 import com.a6raywa1cher.jsonrestsecurity.web.JsonRestSecurityConfigProperties;
 import com.a6raywa1cher.jsonrestsecurity.web.JsonRestSecurityPropertiesConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -58,10 +58,10 @@ public class SecurityComponentsConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnBean(UserService.class)
+	@ConditionalOnBean(IUserService.class)
 	@ConditionalOnMissingBean(AuthenticationResolver.class)
-	public AuthenticationResolver authenticationResolver(UserService<?> userService) {
-		return new AuthenticationResolverImpl(userService);
+	public AuthenticationResolver authenticationResolver(IUserService<?> IUserService) {
+		return new AuthenticationResolverImpl(IUserService);
 	}
 
 	@Bean
@@ -85,12 +85,12 @@ public class SecurityComponentsConfiguration {
 	@Bean
 	@ConditionalOnMissingBean(FirstUserCreatorApplicationListener.class)
 	@ConditionalOnProperty(prefix = "json-rest-security.first-user", value = "enable", havingValue = "true")
-	public FirstUserCreatorApplicationListener firstAdminCreatorApplicationListener(UserService<?> userService) {
+	public FirstUserCreatorApplicationListener firstAdminCreatorApplicationListener(IUserService<?> IUserService) {
 		return new FirstUserCreatorApplicationListener(
 			userConfigProperties.getUsername(),
 			userConfigProperties.getPassword(),
 			userConfigProperties.getRole(),
-			userService
+			IUserService
 		);
 	}
 }

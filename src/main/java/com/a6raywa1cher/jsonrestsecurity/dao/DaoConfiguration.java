@@ -6,7 +6,7 @@ import com.a6raywa1cher.jsonrestsecurity.dao.repo.DefaultUserRepository;
 import com.a6raywa1cher.jsonrestsecurity.dao.repo.IUserRepository;
 import com.a6raywa1cher.jsonrestsecurity.dao.repo.RefreshTokenRepository;
 import com.a6raywa1cher.jsonrestsecurity.dao.service.DefaultUserService;
-import com.a6raywa1cher.jsonrestsecurity.dao.service.UserService;
+import com.a6raywa1cher.jsonrestsecurity.dao.service.IUserService;
 import com.a6raywa1cher.jsonrestsecurity.web.PasswordEncoderConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationContext;
@@ -48,8 +48,8 @@ public class DaoConfiguration {
 	}
 
 	@Bean
-	@ConditionalOnMissingBean(UserService.class)
-	public UserService<DefaultUser> userService(IUserRepository<DefaultUser> userRepository, PasswordEncoder passwordEncoder) {
+	@ConditionalOnMissingBean(IUserService.class)
+	public IUserService<DefaultUser> userService(IUserRepository<DefaultUser> userRepository, PasswordEncoder passwordEncoder) {
 		return new DefaultUserService(userRepository, passwordEncoder);
 	}
 }

@@ -9,7 +9,7 @@ import java.util.Optional;
  *
  * @see AbstractUserService
  */
-public interface UserService<T extends IUser> {
+public interface IUserService<T extends IUser> {
 	/**
 	 * Updates last visit timestamp to the current time.
 	 *

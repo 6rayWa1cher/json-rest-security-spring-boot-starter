@@ -3,7 +3,7 @@ package com.a6raywa1cher.jsonrestsecurity.rest;
 import com.a6raywa1cher.jsonrestsecurity.component.SecurityComponentsConfiguration;
 import com.a6raywa1cher.jsonrestsecurity.component.resolver.AuthenticationResolver;
 import com.a6raywa1cher.jsonrestsecurity.dao.DaoConfiguration;
-import com.a6raywa1cher.jsonrestsecurity.dao.service.UserService;
+import com.a6raywa1cher.jsonrestsecurity.dao.service.IUserService;
 import com.a6raywa1cher.jsonrestsecurity.jwt.JwtAuthConfiguration;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.JwtRefreshPairService;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.RefreshTokenService;
@@ -27,8 +27,8 @@ public class AuthControllerConfiguration {
 		AuthenticationResolver authenticationResolver,
 		RefreshTokenService refreshTokenService,
 		JwtRefreshPairService jwtRefreshPairService,
-		UserService<?> userService
+		IUserService<?> IUserService
 	) {
-		return new AuthController(authenticationResolver, refreshTokenService, jwtRefreshPairService, userService);
+		return new AuthController(authenticationResolver, refreshTokenService, jwtRefreshPairService, IUserService);
 	}
 }

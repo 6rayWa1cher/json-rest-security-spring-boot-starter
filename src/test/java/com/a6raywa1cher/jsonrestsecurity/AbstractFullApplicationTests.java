@@ -313,6 +313,22 @@ public abstract class AbstractFullApplicationTests<T extends AbstractUser> {
 		};
 	}
 
+	@Test
+	@Transactional
+	void selfUserTest() throws Exception {
+		new WithUser(USERNAME, PASSWORD) {
+			@Override
+			void run() throws Exception {
+				T user = userRepository.findByUsername(USERNAME).orElseThrow();
+
+				securePerform(get("/auth/user"))
+					.andExpect(status().isOk())
+					.andExpect(jsonPath("$.id").value(user.getId()))
+					.andExpect(jsonPath("$.username").value(USERNAME));
+			}
+		};
+	}
+
 	abstract class WithUser {
 		protected String accessToken;
 

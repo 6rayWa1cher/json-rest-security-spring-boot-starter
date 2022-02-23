@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
- * The abstract implementation of {@link UserService}.
+ * The abstract implementation of {@link IUserService}.
  *
  * @see DefaultUserService
  */
-public abstract class AbstractUserService<T extends IUser> implements UserService<T> {
+public abstract class AbstractUserService<T extends IUser> implements IUserService<T> {
 	protected final IUserRepository<T> userRepository;
 	protected final PasswordEncoder passwordEncoder;
 

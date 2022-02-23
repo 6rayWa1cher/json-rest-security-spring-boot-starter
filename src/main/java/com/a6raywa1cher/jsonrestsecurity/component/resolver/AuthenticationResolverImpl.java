@@ -3,7 +3,7 @@ package com.a6raywa1cher.jsonrestsecurity.component.resolver;
 import com.a6raywa1cher.jsonrestsecurity.authentication.JwtAuthentication;
 import com.a6raywa1cher.jsonrestsecurity.component.SecurityComponentsConfiguration;
 import com.a6raywa1cher.jsonrestsecurity.dao.model.IUser;
-import com.a6raywa1cher.jsonrestsecurity.dao.service.UserService;
+import com.a6raywa1cher.jsonrestsecurity.dao.service.IUserService;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,10 +21,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 @SuppressWarnings("ClassCanBeRecord")
 public class AuthenticationResolverImpl implements AuthenticationResolver {
-	private final UserService<?> userService;
+	private final IUserService<?> IUserService;
 
-	public AuthenticationResolverImpl(UserService<?> userService) {
-		this.userService = userService;
+	public AuthenticationResolverImpl(IUserService<?> IUserService) {
+		this.IUserService = IUserService;
 	}
 
 	/**
@@ -47,9 +47,9 @@ public class AuthenticationResolverImpl implements AuthenticationResolver {
 			throw new BadCredentialsException("No credentials presented");
 		}
 		if (authentication instanceof JwtAuthentication jwtAuthentication) {
-			return userService.getById(jwtAuthentication.getPrincipal()).orElseThrow();
+			return IUserService.getById(jwtAuthentication.getPrincipal()).orElseThrow();
 		} else if (authentication instanceof UsernamePasswordAuthenticationToken token) {
-			return userService.getById((Long) token.getPrincipal()).orElseThrow();
+			return IUserService.getById((Long) token.getPrincipal()).orElseThrow();
 		}
 		throw new AuthenticationResolveException("Unknown Authentication " + authentication.getClass().getCanonicalName());
 	}

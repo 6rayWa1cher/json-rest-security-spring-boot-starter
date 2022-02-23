@@ -3,7 +3,7 @@ package com.a6raywa1cher.jsonrestsecurity.web;
 import com.a6raywa1cher.jsonrestsecurity.component.resolver.AuthenticationResolveException;
 import com.a6raywa1cher.jsonrestsecurity.component.resolver.AuthenticationResolver;
 import com.a6raywa1cher.jsonrestsecurity.dao.model.IUser;
-import com.a6raywa1cher.jsonrestsecurity.dao.service.UserService;
+import com.a6raywa1cher.jsonrestsecurity.dao.service.IUserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -16,11 +16,11 @@ import java.time.LocalDateTime;
 
 @SuppressWarnings({"unchecked", "NullableProblems"})
 public class LastVisitFilter<T extends IUser> extends OncePerRequestFilter {
-	private final UserService<T> userService;
+	private final IUserService<T> IUserService;
 	private final AuthenticationResolver resolver;
 
-	public LastVisitFilter(UserService<T> userService, AuthenticationResolver resolver) {
-		this.userService = userService;
+	public LastVisitFilter(IUserService<T> IUserService, AuthenticationResolver resolver) {
+		this.IUserService = IUserService;
 		this.resolver = resolver;
 	}
 
@@ -34,7 +34,7 @@ public class LastVisitFilter<T extends IUser> extends OncePerRequestFilter {
 					T user = (T) resolver.getUser();
 					LocalDateTime lastVisit = user.getLastVisitAt();
 					if (lastVisit == null || user.getLastVisitAt().plusSeconds(30).isBefore(LocalDateTime.now())) {
-						userService.updateLastVisitAt(user);
+						IUserService.updateLastVisitAt(user);
 					}
 				}
 			} catch (AuthenticationResolveException ignored) {

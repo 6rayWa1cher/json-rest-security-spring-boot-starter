@@ -3,7 +3,7 @@ package com.a6raywa1cher.jsonrestsecurity.providers;
 import com.a6raywa1cher.jsonrestsecurity.authentication.JwtAuthentication;
 import com.a6raywa1cher.jsonrestsecurity.component.authority.GrantedAuthorityService;
 import com.a6raywa1cher.jsonrestsecurity.dao.model.IUser;
-import com.a6raywa1cher.jsonrestsecurity.dao.service.UserService;
+import com.a6raywa1cher.jsonrestsecurity.dao.service.IUserService;
 import com.a6raywa1cher.jsonrestsecurity.jwt.JwtToken;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.BlockedRefreshTokensService;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -32,13 +32,13 @@ import java.util.Collection;
  */
 @SuppressWarnings("ClassCanBeRecord")
 public class JwtAuthenticationProvider implements AuthenticationProvider {
-	private final UserService<?> userService;
+	private final IUserService<?> IUserService;
 	private final BlockedRefreshTokensService blockedTokensService;
 	private final GrantedAuthorityService grantedAuthorityService;
 
-	public JwtAuthenticationProvider(UserService<?> userService, BlockedRefreshTokensService blockedTokensService,
+	public JwtAuthenticationProvider(IUserService<?> IUserService, BlockedRefreshTokensService blockedTokensService,
 									 GrantedAuthorityService grantedAuthorityService) {
-		this.userService = userService;
+		this.IUserService = IUserService;
 		this.blockedTokensService = blockedTokensService;
 		this.grantedAuthorityService = grantedAuthorityService;
 	}
@@ -58,7 +58,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 				throw new CredentialsExpiredException("Refresh-token was revoked");
 			}
 			Long userId = jwtToken.getUid();
-			IUser user = userService.getById(userId)
+			IUser user = IUserService.getById(userId)
 				.orElseThrow(() -> new UsernameNotFoundException(String.format("User %d doesn't exists", userId)));
 			Collection<GrantedAuthority> authorities = grantedAuthorityService.getAuthorities(user);
 			return new JwtAuthentication(authorities, jwtToken);

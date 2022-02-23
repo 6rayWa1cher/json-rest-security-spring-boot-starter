@@ -1,6 +1,6 @@
 package com.a6raywa1cher.jsonrestsecurity.component;
 
-import com.a6raywa1cher.jsonrestsecurity.dao.service.UserService;
+import com.a6raywa1cher.jsonrestsecurity.dao.service.IUserService;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,21 +15,21 @@ public class FirstUserCreatorApplicationListener implements ApplicationListener<
 
 	private final String role;
 
-	private final UserService<?> userService;
+	private final IUserService<?> IUserService;
 
-	public FirstUserCreatorApplicationListener(String username, String password, String role, UserService<?> userService) {
+	public FirstUserCreatorApplicationListener(String username, String password, String role, IUserService<?> IUserService) {
 		this.username = username;
 		this.password = password;
 		this.role = role;
-		this.userService = userService;
+		this.IUserService = IUserService;
 	}
 
 	@Override
 	@Transactional
 	public void onApplicationEvent(ApplicationReadyEvent event) {
-		if (userService.getByLogin(username).isEmpty()) {
-			userService.create(username, password, role);
-			log.info("Created admin-user");
+		if (IUserService.getByLogin(username).isEmpty()) {
+			IUserService.create(username, password, role);
+			log.info("Created first-user");
 		}
 	}
 }
