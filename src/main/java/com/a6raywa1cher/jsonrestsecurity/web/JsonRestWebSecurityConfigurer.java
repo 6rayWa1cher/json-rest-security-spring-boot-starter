@@ -33,7 +33,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @Order(-1)
-@ConditionalOnProperty(prefix = "web-security", value = "enable-default-web-config", havingValue = "true",
+@ConditionalOnProperty(prefix = "json-rest-security", value = "enable-default-web-config", havingValue = "true",
 	matchIfMissing = true)
 @ConditionalOnMissingBean(type = "org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter")
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)

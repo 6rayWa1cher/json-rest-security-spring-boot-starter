@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@ConditionalOnProperty(prefix = "web-security", value = "enable-auth-controller", havingValue = "true",
+@ConditionalOnProperty(prefix = "json-rest-security", value = "enable-auth-controller", havingValue = "true",
 	matchIfMissing = true)
 @Import({
 	SecurityComponentsConfiguration.class,

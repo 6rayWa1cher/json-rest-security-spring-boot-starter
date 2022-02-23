@@ -17,7 +17,7 @@ import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
  * FailLimiter can be disabled by property {@code json-rest-security.fail-limiter.enable=false}
  */
 @Configuration
-@ConditionalOnProperty(prefix = "web-security.fail-limiter", name = "enable", havingValue = "true",
+@ConditionalOnProperty(prefix = "json-rest-security.fail-limiter", name = "enable", havingValue = "true",
 	matchIfMissing = true)
 @Import(JsonRestSecurityPropertiesConfiguration.class)
 @SuppressWarnings("SpringFacetCodeInspection")
