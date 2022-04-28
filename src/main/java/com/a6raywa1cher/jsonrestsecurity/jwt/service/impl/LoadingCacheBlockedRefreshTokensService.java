@@ -8,7 +8,7 @@ import com.google.common.cache.LoadingCache;
 import java.time.Duration;
 
 /**
- * The default implementation of {@link BlockedRefreshTokensService}.
+ * The alternative implementation of {@link BlockedRefreshTokensService}.
  * <br/>
  * Uses {@link LoadingCache} for storage. Can potentially crash the JVM on a DoS attack with {@code OutOfMemoryError}.
  *
@@ -30,12 +30,12 @@ public class LoadingCacheBlockedRefreshTokensService implements BlockedRefreshTo
 	}
 
 	@Override
-	public void invalidate(String id) {
+	public void invalidate(Long userId, String id) {
 		cache.put(id, id);
 	}
 
 	@Override
-	public boolean isValid(String id) {
+	public boolean isValid(Long userId, String id) {
 		return cache.getIfPresent(id) == null;
 	}
 }

@@ -49,7 +49,7 @@ public class AuthController {
 	@GetMapping("/user")
 	public ResponseEntity<UserInfo> getSelf() {
 		IUser user = authenticationResolver.getUser();
-		return ResponseEntity.ok(new UserInfo(user.getId(), user.getUsername()));
+		return ResponseEntity.ok(new UserInfo(user.getId(), user.getUsername(), user.getUserRole() == null ? null : user.getUserRole().toString()));
 	}
 
 	@PostMapping("/login")

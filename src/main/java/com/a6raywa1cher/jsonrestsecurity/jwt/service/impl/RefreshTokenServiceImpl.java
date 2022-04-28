@@ -43,7 +43,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 			repository.deleteAllFromUser(user, tokenList.stream()
 				.sorted(Comparator.comparing(RefreshToken::getExpiringAt))
 				.limit(tokenList.size() - maxTokensPerUser + 1)
-				.peek(rt -> blockedTokensService.invalidate(rt.getId()))
+				.peek(rt -> blockedTokensService.invalidate(user.getId(), rt.getId()))
 				.toList());
 		}
 		RefreshToken refreshToken = RefreshToken.uuidToken(
@@ -60,7 +60,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 	@Override
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	public void invalidate(IUser user, RefreshToken refreshToken) {
-		blockedTokensService.invalidate(refreshToken.getId());
+		blockedTokensService.invalidate(user.getId(), refreshToken.getId());
 		repository.delete(user, refreshToken);
 	}
 
@@ -68,7 +68,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	public void invalidateAll(IUser user) {
 		List<RefreshToken> allByUser = repository.findAllByUser(user);
-		allByUser.forEach(rt -> blockedTokensService.invalidate(rt.getId()));
+		allByUser.forEach(rt -> blockedTokensService.invalidate(user.getId(), rt.getId()));
 		repository.deleteAllFromUser(user, allByUser);
 	}
 }

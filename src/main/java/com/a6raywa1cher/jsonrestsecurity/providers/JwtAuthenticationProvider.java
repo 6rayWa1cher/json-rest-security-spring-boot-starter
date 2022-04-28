@@ -54,10 +54,10 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 			if (jwtToken == null) {
 				throw new BadCredentialsException("JwtToken not provided");
 			}
-			if (!blockedTokensService.isValid(jwtToken.getRefreshId())) {
+			Long userId = jwtToken.getUid();
+			if (!blockedTokensService.isValid(userId, jwtToken.getRefreshId())) {
 				throw new CredentialsExpiredException("Refresh-token was revoked");
 			}
-			Long userId = jwtToken.getUid();
 			IUser user = iUserService.getById(userId)
 				.orElseThrow(() -> new UsernameNotFoundException(String.format("User %d doesn't exists", userId)));
 			Collection<GrantedAuthority> authorities = grantedAuthorityService.getAuthorities(user);

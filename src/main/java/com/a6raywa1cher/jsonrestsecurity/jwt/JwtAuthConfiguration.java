@@ -1,6 +1,7 @@
 package com.a6raywa1cher.jsonrestsecurity.jwt;
 
 import com.a6raywa1cher.jsonrestsecurity.dao.DaoConfiguration;
+import com.a6raywa1cher.jsonrestsecurity.dao.repo.IUserRepository;
 import com.a6raywa1cher.jsonrestsecurity.dao.repo.RefreshTokenRepository;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.BlockedRefreshTokensService;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.JwtRefreshPairService;
@@ -8,8 +9,8 @@ import com.a6raywa1cher.jsonrestsecurity.jwt.service.JwtTokenService;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.RefreshTokenService;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.impl.JwtRefreshPairServiceImpl;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.impl.JwtTokenServiceImpl;
-import com.a6raywa1cher.jsonrestsecurity.jwt.service.impl.LoadingCacheBlockedRefreshTokensService;
 import com.a6raywa1cher.jsonrestsecurity.jwt.service.impl.RefreshTokenServiceImpl;
+import com.a6raywa1cher.jsonrestsecurity.jwt.service.impl.RepositoryBlockedRefreshTokensService;
 import com.a6raywa1cher.jsonrestsecurity.utils.StringUtils;
 import com.a6raywa1cher.jsonrestsecurity.web.JsonRestSecurityConfigProperties;
 import com.a6raywa1cher.jsonrestsecurity.web.JsonRestSecurityPropertiesConfiguration;
@@ -30,7 +31,6 @@ import static com.a6raywa1cher.jsonrestsecurity.utils.LogUtils.log;
 @Configuration
 @EnableTransactionManagement
 @Import({JsonRestSecurityPropertiesConfiguration.class, DaoConfiguration.class})
-@SuppressWarnings("SpringFacetCodeInspection")
 public class JwtAuthConfiguration {
 	private final JsonRestSecurityConfigProperties.JwtConfigProperties properties;
 
@@ -39,7 +39,7 @@ public class JwtAuthConfiguration {
 	}
 
 	/**
-	 * Creates the {@link BlockedRefreshTokensService} bean with {@link LoadingCacheBlockedRefreshTokensService} implementation.
+	 * Creates the {@link BlockedRefreshTokensService} bean with {@link RepositoryBlockedRefreshTokensService} implementation.
 	 * <br/>
 	 * Access token life duration is being taken from {@code json-rest-security.jwt.access-duration} property (default 5 minutes).
 	 *
@@ -47,8 +47,8 @@ public class JwtAuthConfiguration {
 	 */
 	@Bean
 	@ConditionalOnMissingBean(BlockedRefreshTokensService.class)
-	public BlockedRefreshTokensService blockedRefreshTokensService() {
-		return new LoadingCacheBlockedRefreshTokensService(properties.getAccessDuration());
+	public BlockedRefreshTokensService blockedRefreshTokensService(IUserRepository<?> userRepository) {
+		return new RepositoryBlockedRefreshTokensService<>(userRepository);
 	}
 
 	/**

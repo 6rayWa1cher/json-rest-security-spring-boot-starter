@@ -44,7 +44,7 @@ public class RefreshTokenServiceImplTests {
 
 		verify(repository).save(user, issue);
 		verify(repository).deleteAllFromUser(user, List.of(refreshTokens.get(0)));
-		verify(blockedService).invalidate(refreshTokens.get(0).getId());
+		verify(blockedService).invalidate(user.getId(), refreshTokens.get(0).getId());
 	}
 
 	@Test
@@ -63,7 +63,7 @@ public class RefreshTokenServiceImplTests {
 
 		verify(repository).save(user, issue);
 		verify(repository, never()).deleteAllFromUser(eq(user), any());
-		verify(blockedService, never()).invalidate(any());
+		verify(blockedService, never()).invalidate(any(), any());
 	}
 
 	@Test
@@ -82,8 +82,8 @@ public class RefreshTokenServiceImplTests {
 
 		verify(repository).save(user, issue);
 		verify(repository).deleteAllFromUser(user, List.of(refreshTokens.get(0), refreshTokens.get(1), refreshTokens.get(2)));
-		verify(blockedService).invalidate(refreshTokens.get(0).getId());
-		verify(blockedService).invalidate(refreshTokens.get(1).getId());
-		verify(blockedService).invalidate(refreshTokens.get(2).getId());
+		verify(blockedService).invalidate(user.getId(), refreshTokens.get(0).getId());
+		verify(blockedService).invalidate(user.getId(), refreshTokens.get(1).getId());
+		verify(blockedService).invalidate(user.getId(), refreshTokens.get(2).getId());
 	}
 }

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.a6raywa1cher</groupId>
     <artifactId>json-rest-security-spring-boot-starter</artifactId>
-    <version>0.0.5</version>
+    <version>0.0.6-SNAPSHOT</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Security enclosure for JSON REST backends on Spring Boot WebMvc</description>
@@ -12,10 +12,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <guava.version>31.0.1-jre</guava.version>
-        <java-jwt.version>3.18.3</java-jwt.version>
-        <springdoc.version>1.6.6</springdoc.version>
-        <hibernate-types.version>2.14.0</hibernate-types.version>
+        <guava.version>31.1-jre</guava.version>
+        <java-jwt.version>3.19.1</java-jwt.version>
+        <springdoc.version>1.6.7</springdoc.version>
+        <hibernate-types.version>2.16.1</hibernate-types.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>

@@ -7,9 +7,12 @@ public class UserInfo {
 
 	private String username;
 
-	public UserInfo(Long id, String username) {
+	private String userRole;
+
+	public UserInfo(Long id, String username, String userRole) {
 		this.id = id;
 		this.username = username;
+		this.userRole = userRole;
 	}
 
 	@Override
@@ -17,6 +20,7 @@ public class UserInfo {
 		return "UserInfo{" +
 			"id=" + id +
 			", username='" + username + '\'' +
+			", userRole='" + userRole + '\'' +
 			'}';
 	}
 
@@ -25,12 +29,14 @@ public class UserInfo {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		UserInfo userInfo = (UserInfo) o;
-		return Objects.equals(id, userInfo.id) && Objects.equals(username, userInfo.username);
+		return Objects.equals(id, userInfo.id) &&
+			Objects.equals(username, userInfo.username) &&
+			Objects.equals(userRole, userInfo.userRole);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, username);
+		return Objects.hash(id, username, userRole);
 	}
 
 	public Long getId() {
@@ -47,5 +53,13 @@ public class UserInfo {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getUserRole() {
+		return userRole;
+	}
+
+	public void setUserRole(String userRole) {
+		this.userRole = userRole;
 	}
 }
