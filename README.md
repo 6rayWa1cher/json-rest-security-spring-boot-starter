@@ -212,6 +212,7 @@ Properties for fail-limiter are listed below.
 | `json-rest-security.enable`                          | Enable or disable `json-rest-security`                | true               |
 | `json-rest-security.enable-auth-controller`          | Enable or disable AuthController                      | true               |
 | `json-rest-security.enable-default-web-config`       | Enable or disable JsonRestWebSecurityConfigurer       | true               |
+| `json-rest-security.cors-allowed-origins`            | CORS allowed origins, array                           | empty              |
 | `json-rest-security.jwt.access-duration`             | Access token duration                                 | PT5M               |
 | `json-rest-security.jwt.refresh-duration`            | Refresh token duration                                | P14D               |
 | `json-rest-security.jwt.max-refresh-tokens-per-user` | Max refresh token count per user                      | 10                 |
