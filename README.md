@@ -23,7 +23,7 @@ Add the dependency to your pom.xml
 <dependency>
    <groupId>com.a6raywa1cher</groupId>
    <artifactId>json-rest-security-spring-boot-starter</artifactId>
-   <version>0.0.5</version>
+   <version>0.0.7</version>
 </dependency>
 ```
 
@@ -225,6 +225,13 @@ Properties for fail-limiter are listed below.
 | `json-rest-security.first-user.username`             | First user's username                                 | admin              |
 | `json-rest-security.first-user.password`             | First user's password                                 | admin              |
 | `json-rest-security.first-user.role`                 | First user's role                                     | ADMIN              |
+
+You can configure `json-rest-security.cors-allowed-origins` with an environment variable
+`JSON_REST_SECURITY_CORS_ALLOWED_ORIGINS` using comma separated list of allowed origins:
+
+```dotenv
+JSON_REST_SECURITY_CORS_ALLOWED_ORIGINS=http://localhost:8080,http://localhost:3000
+```
 
 ## Contribution
 

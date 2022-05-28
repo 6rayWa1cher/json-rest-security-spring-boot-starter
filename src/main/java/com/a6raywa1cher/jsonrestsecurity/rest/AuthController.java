@@ -23,7 +23,6 @@ import java.util.Optional;
 
 @RequestMapping("/auth")
 @ResponseBody
-@SuppressWarnings("ClassCanBeRecord")
 public class AuthController {
 	private final RefreshTokenService refreshTokenService;
 
